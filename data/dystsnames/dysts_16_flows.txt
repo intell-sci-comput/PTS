@@ -1,0 +1,16 @@
+NewtonLiepnik
+HyperLorenz
+HyperJha
+HyperPang
+ShimizuMorioka
+GenesioTesi
+Laser
+Duffing
+ForcedBrusselator
+KawczynskiStrizhak
+Rucklidge
+ForcedFitzHughNagumo
+Finance
+DequanLi
+Hadley
+SprottJerk
