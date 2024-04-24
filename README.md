@@ -10,7 +10,7 @@ Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
 conda create -n PSRN python=3.8 pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
-_Note: Adjust the `cudatoolkit` version as necessary based on your GPU's CUDA compatibility._
+_Note: Adjust the `pytorch-cuda` version as necessary based on your GPU's CUDA compatibility._
 
 ### Step 2: Install Other Dependencies Using Pip
 
