@@ -15,6 +15,7 @@ _Note: Adjust the `pytorch-cuda` version as necessary based on your GPU's CUDA v
 ### Step 2: Install Other Dependencies Using Pip
 
 ```bash
+conda activate PSRN
 pip install pandas==1.5.3 click==8.0.4 dysts==0.1 numpy==1.22.3 scipy==1.7.3 tqdm==4.65.0 pysindy==1.7.5 derivative==0.6.0 scikit-learn==1.3.0 sympy==1.10.1
 ```
 
