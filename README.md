@@ -139,12 +139,12 @@ python study_ablation/constants/run_c_experiments.py --n_runs 20 -g 0
 
 ### DR Mask Ablation
 
-You can modify the operator library using the `-l` flag, adjust the number of input slots with `-i`, and choose whether to use the DR Mask by setting `-r`. 
+You can modify the operator library using the `-l` flag, adjust the number of input slots with `-i`, and choose whether to use the DR Mask.
 While the script is running, monitor the memory footprint using nvidia-smi or nvitop.
 
 ```bash
-python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 20 -g 0 -l koza -i 5 -b benchmark.csv -r False
-python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 20 -g 0 -l koza -i 5 -b benchmark.csv -r True
+python study_ablation/drmask/run_without_drmask.py --use_drmask True -i 4 -l koza -g 0
+python study_ablation/drmask/run_without_drmask.py --use_drmask False -i 4 -l koza -g 0
 ```
 
 ### Robustness to Noise
