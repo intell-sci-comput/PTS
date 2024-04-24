@@ -7,7 +7,7 @@ Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
 ### Step 1: Install PyTorch
 
 ```bash
-conda install pytorch>=2.0.0 cudatoolkit -c pytorch
+conda create -n PSRN python=3.8 pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 _Note: Adjust the `cudatoolkit` version as necessary based on your GPU's CUDA compatibility._
