@@ -119,4 +119,39 @@ python run_realworld_roughpipe.py --n_runs 20 -g 0     # Using GPU index 0
 
 The results (Pareto optimal expressions) can be found in `log/roughpipe`
 
+## Ablation Studies
+
+To reproduce our ablation studies, execute the following command.
+The results will be stored in the `log/` directory.
+
+### MCTS Ablation
+
+```bash
+python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 100 -g 0 -l koza -i 5 -r False
+python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 100 -g 0 -l koza -i 5 -r True
+```
+
+### Constant Range Sensitivity
+
+```bash
+python study_ablation/constants/run_c_experiments.py --n_runs 20 -g 0 
+```
+
+### DR Mask Ablation
+
+You can modify the operator library using the `-l` flag, adjust the number of input slots with `-i`, and choose whether to use the DR Mask by setting `-r`. 
+While the script is running, monitor the memory footprint using nvidia-smi or nvitop.
+
+```bash
+python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 20 -g 0 -l koza -i 5 -b benchmark.csv -r False
+python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 20 -g 0 -l koza -i 5 -b benchmark.csv -r True
+```
+
+### Robustness to Noise
+
+```bash
+python study_ablation/noise/run_noise.py --experiment_name=noise --n_runs 100 -g 0 -l arithmetic -b benchmark_noise.csv
+```
+
+
 
