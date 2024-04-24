@@ -22,7 +22,7 @@ pip install pandas==1.5.3 click==8.0.4 dysts==0.1 numpy==1.22.3 scipy==1.7.3 tqd
 Notes: 
 - If using a version of PyTorch below 2.0, an error may occur during the `torch.topk` operation.
 - The experiments were performed on servers with Nvidia A100 (80GB) and Intel(R) Xeon(R) Platinum 8380 cpus @ 2.30GHz.
-- We recommend using a high-memory GPU as smaller cards may encounter CUDA memory errors under our experimental settings. If you experience memory issues, consider reducing the number of input slots or opting for `basic` operator sets as detailed in `run_benchmark_all.py`.
+- We recommend using a high-memory GPU as smaller cards may encounter CUDA memory errors under our experimental settings. If you experience memory issues, consider reducing the number of input slots or opting for `basic` operator sets (e.g., replacing "Sub" and "Div" with "Neg" and "Inv") as detailed in `run_benchmark_all.py`.
 
 
 ## Quickstart with Custom Data
