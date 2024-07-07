@@ -88,7 +88,7 @@ class Exp(nn.Module):
         self.operator = Exp_op()
 
     def forward(self, x):
-        return torch.exp(torch.clamp(x, max=self.threshold))
+        return torch.exp(x)
 
 
 class Log(nn.Module):
@@ -104,9 +104,8 @@ class Log(nn.Module):
         self.operator = Log_op()
 
     def forward(self, x):
-        abs_ = torch.abs(x)
-        clamp = torch.clamp(abs_, min=self.threshold)
-        log = torch.log(clamp)
+
+        log = torch.log(x)
         return log
 
 # neg
@@ -138,7 +137,6 @@ class Inv(nn.Module):
         self.operator = Inv_op()
 
     def forward(self, x):
-        x = torch.where(x < 0, torch.clamp(x, max=-self.threshold), torch.clamp(x, min=self.threshold))
         return 1 / x
 
 class Mul(nn.Module):
@@ -149,18 +147,14 @@ class Mul(nn.Module):
         self.out_dim = in_dim * (in_dim + 1) // 2
         self.is_unary = False
         self.is_directed = False
-
         self.operator = Mul_op()
-
-        indices = torch.triu_indices(
-            in_dim, in_dim, offset=0, dtype=torch.long)
-
-        self.register_buffer('indices', indices)
-
-        self.indices = self.indices.to(device)
+        self.device = device
 
     def forward(self, x):
-        out = (x[:, self.indices[0]] * x[:, self.indices[1]])
+        indices = torch.triu_indices(
+            self.in_dim, self.in_dim, offset=0, dtype=torch.int32, device=x.device
+        )
+        out = x[:, indices[0]] * x[:, indices[1]]
         return out
 
 
@@ -174,17 +168,13 @@ class Add(nn.Module):
         self.is_directed = False
 
         self.operator = Add_op()
-
-        indices = torch.triu_indices(
-            in_dim, in_dim, offset=0, dtype=torch.long)
-        
-        self.register_buffer('indices', indices)
-
-        self.indices = self.indices.to(device)
+        self.device = device
 
     def forward(self, x):
-        # x (bs, dim)
-        out = (x[:, self.indices[0]] + x[:, self.indices[1]])
+        indices = torch.triu_indices(
+            self.in_dim, self.in_dim, offset=0, dtype=torch.int32, device=x.device
+        )
+        out = x[:, indices[0]] + x[:, indices[1]]
         return out
 
 
@@ -201,20 +191,14 @@ class Div(nn.Module):
 
         self.operator = Div_op()
 
+        
     def forward(self, x):
-        # x (bs, dim)
-        # out = (x[:, self.indices[0]] / x[:, self.indices[1]])
+    
+        num = x.view(1, -1, 1)
+        deno = x.view(1, 1, -1)
+        out = (num / deno).view(1, -1)
         
-        deno = x
-        deno = torch.where(deno < 0, torch.clamp(deno, max=-self.threshold), torch.clamp(deno, min=self.threshold))
-        num = x
-        
-        deno = deno.reshape(1, 1, -1)
-        num = num.reshape(1, -1, 1)
-        out = num / deno
-        out = out.reshape(1, -1)
         return out
-
 
 class Sub(nn.Module):
     def __init__(self, in_dim, device):
@@ -228,12 +212,11 @@ class Sub(nn.Module):
         self.operator = Sub_op()
 
     def forward(self, x):
-        # x (bs, dim)
-        deno = x.reshape(1, 1, -1)
-        num = x.reshape(1, -1, 1)
-        out = num - deno
-        out = out.reshape(1, -1)
+        num = x.view(1, -1, 1)
+        deno = x.view(1, 1, -1)
+        out = (num - deno).view(1, -1)
         return out
+
 
 
 class SemiDiv(nn.Module):
@@ -248,21 +231,14 @@ class SemiDiv(nn.Module):
         self.is_directed = False
 
         self.operator = SemiDiv_op()
-
-        indices = torch.triu_indices(
-            in_dim, in_dim, offset=0, dtype=torch.long)
-        
-        self.register_buffer('indices', indices)
-
-        self.indices = self.indices.to(device)
+        self.device = device
 
     def forward(self, x):
-        # x (bs, dim)
-        # out = (x[:, self.indices[0]] / x[:, self.indices[1]])
-        
-        deno = x[:, self.indices[1]]
-        deno = torch.where(deno < 0, torch.clamp(deno, max=-self.threshold), torch.clamp(deno, min=self.threshold))
-        num = x[:, self.indices[0]]
+        indices = torch.triu_indices(
+            self.in_dim, self.in_dim, offset=0, dtype=torch.int32, device=x.device
+        )
+        deno = x[:, indices[1]]
+        num = x[:, indices[0]]
         out = num / deno
         return out
 
@@ -277,19 +253,15 @@ class SemiSub(nn.Module):
         self.is_directed = False
 
         self.operator = SemiSub_op()
-
-        indices = torch.triu_indices(
-            in_dim, in_dim, offset=0, dtype=torch.long)
-        
-        self.register_buffer('indices', indices)
-
-        self.indices = self.indices.to(device)
+        self.device = device
 
     def forward(self, x):
         # x (bs, dim)
-        out = (x[:, self.indices[0]] - x[:, self.indices[1]])
+        indices = torch.triu_indices(
+            self.in_dim, self.in_dim, offset=0, dtype=torch.int32, device=x.device
+        )
+        out = (x[:, indices[0]] - x[:, indices[1]])
         return out
-
 
 class Sign(nn.Module):
     def __init__(self, in_dim, device):

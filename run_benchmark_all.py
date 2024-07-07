@@ -51,6 +51,7 @@ def main(experiment_name, n_runs, gpu_index, library, n_down_sample, n_step_simu
     os.environ['CUDA_VISIBLE_DEVICES']= str(gpu_index) 
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cpu")
     print(device)
     random_seed = seed
 
@@ -172,8 +173,8 @@ def main(experiment_name, n_runs, gpu_index, library, n_down_sample, n_step_simu
                                                     prun_const=True,
                                                     prun_ndigit=2,
                                                     real_time_display=True,
-                                                    real_time_display_freq=20,
-                                                    real_time_display_ntop=5,
+                                                    real_time_display_freq=1,
+                                                    real_time_display_ntop=10,
                                                     dc=0.1,             # constant sampling interval
                                                     top_k=topk, 
                                                     )

@@ -54,23 +54,20 @@ class Exp_op():
         return 'exp({})'.format(sub_expr)
 
     def transform_inputs(self, x):
-        return torch.exp(torch.clamp(x, max=self.threshold))
+        return torch.exp(x)
 
 
 class Log_op():
     def __init__(self, threshold=1e-10):
         super(Log_op, self).__init__()
         self.is_unary = True
-
         self.threshold = threshold
 
     def get_expr(self, sub_expr):
-        return 'log(Abs({}))'.format(sub_expr)
+        return 'log({})'.format(sub_expr)
 
     def transform_inputs(self, x):
-        abs_ = torch.abs(x)
-        clamp = torch.clamp(abs_, min=self.threshold)
-        log = torch.log(clamp)
+        log = torch.log(x)
         return log
 
 
@@ -97,7 +94,6 @@ class Inv_op():
         return '(1/({}))'.format(sub_expr)
 
     def transform_inputs(self, x):
-        x = torch.where(x < 0, torch.clamp(x, max=-self.threshold), torch.clamp(x, min=self.threshold))
         return 1 / x
 
 
@@ -143,7 +139,7 @@ class Div_op():
         return '({})/({})'.format(sub_expr1, sub_expr2)
 
     def transform_inputs(self, x1, x2):
-        deno = torch.where(x2 < 0, torch.clamp(x2, max=-self.threshold), torch.clamp(x2, min=self.threshold))
+        deno = x2
         num = x1
         return num / deno
 
@@ -171,7 +167,7 @@ class SemiDiv_op():
         return '({})/({})'.format(sub_expr1, sub_expr2)
 
     def transform_inputs(self, x1, x2):
-        deno = torch.where(x2 < 0, torch.clamp(x2, max=-self.threshold), torch.clamp(x2, min=self.threshold))
+        deno = x2
         num = x1
         return num / deno
 

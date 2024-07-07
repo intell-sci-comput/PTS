@@ -126,7 +126,7 @@ def main(experiment_name, gpu_index, operators, n_down_sample, n_step_simulation
                                         prun_const=True,
                                         prun_ndigit=2,
                                         real_time_display=True,
-                                        real_time_display_freq=5,
+                                        real_time_display_freq=1,
                                         real_time_display_ntop=10,
                                         dc=0.1,             # constant sampling interval
                                         top_k=topk, 

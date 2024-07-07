@@ -197,14 +197,15 @@ class PSRN(nn.Module):
                  device='cuda'):
         super(PSRN, self).__init__()
 
-        if device == 'cuda':
-            self.device = torch.device('cuda')
-        elif device == 'cpu':
-            self.device = torch.device('cpu')
-        else:
-            raise ValueError(
-                'device must be cuda or cpu, got {}'.format(device))
-
+        if isinstance(device, str):
+            if device == 'cuda':
+                self.device = torch.device('cuda')
+            elif device == 'cpu':
+                self.device = torch.device('cpu')
+            else:
+                raise ValueError(
+                    'device must be cuda or cpu, got {}'.format(device))
+        self.device = device
         self.n_variables = n_variables
         self.operators = operators
         self.n_symbol_layers = n_symbol_layers

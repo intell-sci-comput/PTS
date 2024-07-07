@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+import random
 import numpy as np
 import sympy
 from sympy import Eq
@@ -45,6 +46,7 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 device = torch.device('cuda')
+# device = torch.device('cpu')
 
 
 def insert_B_on_Add(expr_sympy):
@@ -502,8 +504,8 @@ class PSRN_Regressor(nn.Module):
             prun_const=True,
             prun_ndigit=6,
             real_time_display=True,
-            real_time_display_freq=20,
-            real_time_display_ntop=5,
+            real_time_display_freq=1,
+            real_time_display_ntop=10,
             ablation_random_MCTS=False,
             dc=0.1,
             add_bias=True,
@@ -545,11 +547,9 @@ class PSRN_Regressor(nn.Module):
             # self.X.to(self.net.device)
             # self.Y.to(self.net.device)
             
-            self.X_down_sample = self.X
-            self.Y_down_sample = self.Y
             print('[INFO]: Down sampling disabled.')
             print('[INFO]: PSRN forwarding will use {}/{} samples.'.format(
-                len(self.X_down_sample), len(self.X)
+                n_down_sample, len(self.X)
             ))
         else:
 
@@ -557,24 +557,10 @@ class PSRN_Regressor(nn.Module):
                 n_down_sample, len(self.X))
             
             
-            # idx = np.arange(0, X.shape[0], X.shape[0] // n_down_sample)
-            # self.X_down_sample = X[idx]
-            # self.Y_down_sample = Y[idx]
-            
-            
-            # Calculate the interval for the downsampling
-            interval = self.X.shape[0] // n_down_sample
-            import random
-            # Generate indices for downsampling, taking the offset into account
-            idx = (np.arange(n_down_sample) * interval + random.randint(0, X.shape[0] - 1)) % X.shape[0]
-            # Downsample X and Y using the generated indices
-            self.X_down_sample = X[idx, :]
-            self.Y_down_sample = Y[idx, :]
-            
             print('[INFO]: Using down sampling,')
             
             print('[INFO]: PSRN forwarding will use {}/{} samples to speed up'.format(
-                len(self.X_down_sample), len(self.X)
+                n_down_sample, len(self.X)
             ))
             if self.use_const:
                 print('[INFO]: Least Square will use all {} samples'.format(
@@ -676,7 +662,6 @@ class PSRN_Regressor(nn.Module):
                 return True, self.pareto_frontier
 
         root_node = MonteCarloNode(input_expr_ls,
-                                   self.X_down_sample,
                                    self.operators_op,
                                    0,
                                    self.n_variables + self.n_cross,
@@ -723,9 +708,6 @@ class PSRN_Regressor(nn.Module):
                             expr_reward_mse_complexity_tup_ls = [(
                                 e,r,m,c
                             )]
-                            # import pandas as pd
-                            # df = pd.DataFrame(expr_reward_mse_complexity_tup_ls)
-                            # print(df)
                             
                             flag = self.pareto_update_and_check(expr_reward_mse_complexity_tup_ls)
                             
@@ -752,7 +734,50 @@ class PSRN_Regressor(nn.Module):
 
         return False, self.pareto_frontier
 
+
+
+    def predict(self, X):
+        if isinstance(X, pd.DataFrame):
+            X = X.values
         
+        best_expr_str = self.get_pf()[0][0]
+        print('best_expr_str')
+        print(best_expr_str)
+        print('self.variables')
+        print(self.variables)
+        print('X')
+        print(X.shape)
+        from ..utils.data import expr_to_Y_pred
+        Y_pred = expr_to_Y_pred(best_expr_str, X, self.variables)
+        return Y_pred
+        
+        
+    def get_pf(self, sort_by='reward', descend=None):
+        dict_ = {'expr': (0, False), 'mse': (2, False),
+                 'reward': (1, True), 'complexity': (3, False)}
+        if descend is None:
+            descend = dict_[sort_by][1]
+        sort_index = dict_[sort_by][0]
+        
+        pareto_frontier = self.pareto_frontier.copy()
+        pareto_frontier.sort(key=lambda x: x[sort_index], reverse=descend)
+        
+        return pareto_frontier
+        
+
+    def get_params(self):
+        return dict(
+            variables=self.variables,
+            operators=self.operators,
+            n_symbol_layers=self.n_symbol_layers,
+            n_inputs=self.n_inputs,
+            use_dr_mask=self.use_dr_mask,
+            use_const=self.use_const,
+            trying_const_num=self.trying_const_num,
+            trying_const_range=self.trying_const_range,
+            trying_const_n_try=self.trying_const_n_try
+        )
+ 
     def fit_LS(self, expr_str, X, Y, variables, min_MSE_raw, add_bias, together):
         '''X,Y: (bs,m), (bs,1) numpy'''
         def get_loss_lm(C):
@@ -843,6 +868,10 @@ class PSRN_Regressor(nn.Module):
                 continue
             if sample[0] in [x[0] for x in self.pareto_frontier]:
                 continue
+            
+            expr = str(self.set_real(sympy.sympify(self.del_float_one(str(expr))), self.is_positive))
+            
+            sample = (expr, sample[1], sample[2], sample[3])
             
             self.pareto_frontier.append(sample)
             
@@ -1011,7 +1040,7 @@ class PSRN_Regressor(nn.Module):
             
             values, indices = torch.topk(mean, n_top, largest=False, sorted=True)
             MSE_min_ls = values.tolist()
-            MSE_mean = torch.mean(mean).item()
+
             expr_best_ls = []
             from tqdm import tqdm
             for i in tqdm(indices.tolist()):
@@ -1021,8 +1050,34 @@ class PSRN_Regressor(nn.Module):
             for expr in expr_best_ls:
                 print(expr)
             print('-'*20)
-            return expr_best_ls, MSE_min_ls, MSE_mean
+            return expr_best_ls, MSE_min_ls
+
+    def get_gs_X(self, g_list, variables, X):
+
+        from utils.data import expr_to_Y_pred
+        """get the base expressions' data (gs)
+
+        Args:
+            g_list (list): _description_
+            variables (list): _description_
+            X (np.ndarray): _description_
+
+        Returns:
+            Tuple[bool, np.ndarray]: success flag and gs_X array (n, n_gs), where n_gs == len(g_list)
+        """
+        success = False
         
+        gs_X = []
+        for g in g_list:
+            g_sympy = sympy.sympify(g)
+            g_X = expr_to_Y_pred(g_sympy, X, variables) # -> [n, 1]
+            gs_X.append(g_X)
+            
+        gs_X = np.hstack(gs_X)
+        # keep safe, np.nan or np.inf -> 0
+        gs_X[np.isnan(gs_X)] = 0
+        gs_X[np.isinf(gs_X)] = 0
+        return success, gs_X
 
     def MC(self, node):
         
@@ -1056,7 +1111,6 @@ class PSRN_Regressor(nn.Module):
             for try_i in range(n_try):
                 
                 if self.use_const:
-                    bs = self.X_down_sample.shape[0]
                     new_const_ls = np.random.uniform(low=self.trying_const_range[0],
                                                     high=self.trying_const_range[1],
                                                     size=(self.trying_const_num,)).tolist()
@@ -1064,43 +1118,51 @@ class PSRN_Regressor(nn.Module):
                         len_step = self.dc
                         new_const_ls[i] = round(round(new_const_ls[i] / len_step) * len_step + self.dc, 2)
                     n_const = len(new_const_ls)
-                    new_data = torch.ones((bs, n_const), device=self.device)
-                    for i in range(n_const):
-                        new_data[:, i] *= new_const_ls[i]
 
                     new_expr_ls = [str(num) for num in new_const_ls]
                     
                     current_node.expr[-self.trying_const_num:] = new_expr_ls
-                    current_node.data[:, -self.trying_const_num:] = new_data
+                expr_ls = current_node.expr
+                orginal_X = self.X.cpu().numpy()
+                orginal_Y = self.Y.cpu().numpy()
+                print('current_node.expr', expr_ls)
+
+                sampled_idx = np.unique(np.random.choice(orginal_X.shape[0], size=min(self.n_down_sample, orginal_X.shape[0]), replace=False))
+                Y = orginal_Y[sampled_idx]
+                print('expr_ls',expr_ls,'self.variables',self.variables)
+                flag, X = self.get_gs_X(expr_ls, self.variables, orginal_X[sampled_idx])
+                X = X.real
+                X = torch.from_numpy(X).to(self.device).float()
+                Y = torch.from_numpy(Y).to(self.device).float()
 
                 self.net.current_expr_ls = current_node.expr
-                print('current_node.expr', self.net.current_expr_ls)
 
-                expr_best_ls, MSE_min_raw_ls, MSE_mean = self.get_best_expr_and_MSE_topk(
-                    current_node.data, self.Y_down_sample, self.top_k)
-                
+                expr_best_ls, MSE_min_raw_ls = self.get_best_expr_and_MSE_topk(
+                    X, Y,  self.top_k)    
                 reward_max = -1
                 
                 for expr_best, MSE_min_raw in zip(expr_best_ls, MSE_min_raw_ls):
                     
-                    expr_sim = str(self.my_simplify(expr_best, self.together))
+                    expr_sim = self.my_simplify(expr_best, self.together)
+                    expr_sim_str = str(expr_sim)
                     
-                    X = self.X.cpu().numpy()
-                    Y = self.Y.cpu().numpy()
-                    
-                    if not ('nan' in expr_sim or 'oo' in expr_sim):
-                        MSE_min_raw = recal_MSE(expr_sim, X, Y, self.variables)
+                    if not ('nan' in expr_sim_str or 'oo' in expr_sim_str):
+                        # print('self.variables',self.variables)
+                        MSE_min_raw = recal_MSE(expr_sim_str, orginal_X, orginal_Y, self.variables)
                     if np.isnan(MSE_min_raw) or np.isinf(MSE_min_raw):
-                        expr_sim = 'nan'
-                    if ('nan' in expr_sim or 'oo' in expr_sim):
-                        MSE_min = np.nan
-                        reward = 0 
-                        complexity = 1e99
+                        print('isnan',expr_sim_str)
+                        continue
+                    # if self.has_nested_func(expr_sim):
+                    #     print('has_nested_func',expr_sim)
+                    #     continue
+                    if ('nan' in expr_sim_str or 'oo' in expr_sim_str):
+                        print('isnan',expr_sim_str)
+                        continue
                     else:
                         if self.use_const:
-                            best_C, MSE_min, expr_c, final_c = self.fit_LS(expr_sim,
-                                                                    X,
-                                                                    Y,
+                            best_C, MSE_min, expr_c, final_c = self.fit_LS(expr_sim_str,
+                                                                    orginal_X,
+                                                                    orginal_Y,
                                                                     self.variables,
                                                                     MSE_min_raw,
                                                                     add_bias=self.add_bias,
@@ -1123,8 +1185,14 @@ class PSRN_Regressor(nn.Module):
                                   '-> ',str(final_c).ljust(15)
                                   )
                         else:
+                            
+                            if self.use_const:
+                                if self.prun_const:
+                                    expr_sim = str(prun_constant(
+                                        expr_sim, self.prun_ndigit))
+                                
                             MSE_min = MSE_min_raw
-                            expr_best = expr_sim
+                            expr_best = str(expr_sim)
                             print('expr_best ', expr_best)
                         complexity = sympy.count_ops(expr_best)
                         reward = self.get_reward(self.eta, complexity, MSE_min)
@@ -1152,7 +1220,6 @@ class MonteCarloNode():
 
     def __init__(self,
                  expr,
-                 data,
                  operators_op,
                  index,
                  max_depth,
@@ -1167,7 +1234,6 @@ class MonteCarloNode():
         self.regressor = regressor
 
         self.expr = expr
-        self.data = data
 
         self.max_depth = max_depth
 
@@ -1246,11 +1312,10 @@ class MonteCarloNode():
                                                1][1][index % factor]
             expr_1 = self.expr[v_index_1]
             expr_2 = self.expr[v_index_2]
-            data_1 = self.data[:, v_index_1]
-            data_2 = self.data[:, v_index_2]
-
-            new_expr = op.get_expr(expr_1, expr_2)
-            new_data = op.transform_inputs(data_1, data_2).reshape(-1, 1)
+            if random.random() < 0.5:
+                new_expr = op.get_expr(expr_1, expr_2)
+            else:
+                new_expr = op.get_expr(expr_2, expr_1)
         else:
 
             index -= self.len_b_block
@@ -1258,16 +1323,19 @@ class MonteCarloNode():
             op = self.operators_op[self.n_b + index // self.n_variable]
             v_index = index % self.n_variable
             expr = self.expr[v_index]
-            data = self.data[:, v_index]  # (bs,)
-
             new_expr = op.get_expr(expr)
-            new_data = op.transform_inputs(data).reshape(-1, 1)
 
-        if new_expr in self.expr:
-            new_node = None
+
+        expr_sympy = sympy.sympify(new_expr)
+        for e in self.expr:
+            if sympy.S(e) == expr_sympy:
+                return None
+        if expr_sympy == sympy.sympify('0'):
+            return None
+        elif expr_sympy.count_ops() > 10:
+            return None
         else:
             new_node = MonteCarloNode(self.expr + [new_expr],
-                                      torch.cat([self.data, new_data], dim=1),
                                       self.operators_op,
                                       index,
                                       self.max_depth,
@@ -1278,18 +1346,13 @@ class MonteCarloNode():
         return new_node
 
     def create_a_child_const(self, index):
-        bs = self.data.shape[0]
         new_const_ls = np.random.uniform(low=self.trying_const_range[0],
                                          high=self.trying_const_range[1],
                                          size=(self.trying_const_num,)).tolist()
         n_const = len(new_const_ls)
-        new_data = torch.ones((bs, n_const), device=self.data.device)
-        for i in range(n_const):
-            new_data[:, i] *= new_const_ls[i]
 
         new_expr_ls = [str(num) for num in new_const_ls]
         new_node = MonteCarloNode(self.expr + new_expr_ls,
-                                  torch.cat([self.data, new_data], dim=1),
                                   self.operators_op,
                                   index,
                                   self.max_depth,
