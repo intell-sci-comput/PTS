@@ -2,7 +2,7 @@
 
 Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
 
-![fig1.png](D:\_Research\_MathAI_Project_2024\20240707_PSRNgit_arxiv_update\after_update_PTS-main\assets\fig1.png)
+![fig1.png](./assets/fig1.png)
 
 
 
