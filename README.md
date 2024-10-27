@@ -1,5 +1,7 @@
 # PTS (Parallelized Tree Search) / PSRN (Parallel Symbolic Regression Network)
 
+[![Paper][]](https://arxiv.org/abs/2407.04405)
+
 Official PyTorch implementation of ["Discovering Symbolic Expressions with Parallelized Tree Search"](https://arxiv.org/abs/2407.04405)
 
 PTS (Parallelized Tree Search) with its core component PSRN (Parallel Symbolic Regression Network) is a novel symbolic regression framework featuring:
