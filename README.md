@@ -1,6 +1,6 @@
-# PTS
+# PTS (Parallelized Tree Search) / PSRN (Parallel Symbolic Regression Network)
 
-Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
+Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS/PSRN)"
 
 ![fig1.png](./assets/fig1.png)
 
