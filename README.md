@@ -4,6 +4,8 @@
 
 Official PyTorch implementation of ["Discovering Symbolic Expressions with Parallelized Tree Search"](https://arxiv.org/abs/2407.04405)
 
+[Ruan, Kai and Gao, Ze-Feng and Guo, Yike and Sun, Hao and Wen, Ji-Rong and Liu, Yang, "Discovering symbolic expressions with parallelized tree search"](https://arxiv.org/abs/2407.04405)
+
 PTS (Parallelized Tree Search) with its core component PSRN (Parallel Symbolic Regression Network) is a novel symbolic regression framework featuring:
 
 - **Scalable**: Evaluates hundreds of millions of candidate expressions within seconds
