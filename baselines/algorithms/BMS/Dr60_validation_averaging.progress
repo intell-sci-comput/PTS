@@ -1,0 +1,2 @@
+# OPTIONS  : {'Drtarget': 60, 'nsample': 100, 'thin': 10, 'burnin': 500, 'nT': 10, 'Tf': 1.2, 'anneal': 20, 'annealf': 5}
+# ARGUMENTS: []
