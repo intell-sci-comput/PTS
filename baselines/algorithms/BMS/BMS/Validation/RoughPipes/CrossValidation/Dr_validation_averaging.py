@@ -25,8 +25,7 @@ def parse_options():
     """Parse command-line arguments.
 
     """
-    parser = OptionParser(usage='usage: %prog [options] PPARFILE') # %prog 是一个特殊的字符串，会被程序名所代替
-    # 这个 PPARGILE 是一个参数文件，里面包含了参数的先验分布的信息
+    parser = OptionParser(usage='usage: %prog [options] PPARFILE')
     parser.add_option("-r", "--Drtarget", dest="Drtarget", default=60,
                       type='float',
                       help="Value of D/r (default: 60)")

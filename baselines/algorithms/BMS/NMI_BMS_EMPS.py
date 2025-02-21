@@ -58,7 +58,7 @@ def parse_options():
 n_seeds = 50
 
 N_SEEDS = 2
-IS_NOCONST_USE_NP1 = True # 可能这个设置，加 大 hp 设置是最有可能找到的
+IS_NOCONST_USE_NP1 = True 
 IS_USE_ALL_5_CONST = False
 
 TIME_BUDGET = 90
@@ -100,7 +100,6 @@ for seed in range(n_seeds):
         contains_nv = f"nv{n_fea}"
         print(f"contains_nv {contains_nv} contains_np {contains_np}")
 
-        # 使用字典映射替代多个if判断
         np_mapping = {"nv3": "np3", "nv4": "np8", "nv5": "np7"}
         contains_np = np_mapping.get(contains_nv, contains_np)
 
@@ -114,7 +113,7 @@ for seed in range(n_seeds):
         x, y = pd.DataFrame(X, columns=variables_name), pd.Series(Y.flatten())
         prior_par = read_prior_par(pparfile) if pparfile else ValueError("No prior file found")
 
-        npar = int(pparfile.split(".np")[1].split(".", 1)[0])  # 更安全的字符串解析
+        npar = int(pparfile.split(".np")[1].split(".", 1)[0])
         Ts = [1] + [opt.Tf**i for i in range(1, opt.nT)]
 
         print(x_train_kk := x, y_train_kk := y, sep="\n")

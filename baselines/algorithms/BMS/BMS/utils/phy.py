@@ -1,25 +1,9 @@
-# 生成模拟的物理系统数据
 from scipy.integrate import solve_ivp
 import numpy as np
 import pandas as pd
 from pysindy import SmoothedFiniteDifference
 
 def gen_phy_data(func, bound_t_ls, n_t, x_0_ls, x_names, xdots_names, deriv_idxs):
-    """用模拟的方法生成物理数据
-
-    Args:
-        func (Callable): 控制方程，输入 x 向量，输出 dx 向量，对应于它们的一阶导
-        bound_t_ls (list): 时间上下界
-        n_t (int): 时间点个数
-        x_0_ls (list): 初值
-        x_names (list): x 的名称
-        xdots_names (list): 需要求导的值求导之后的名字
-        deriv_idxs (list): 需要求导的x中的变量下标
-
-    Returns:
-        df: DataFrame
-    """    
-
     assert len(xdots_names) == len(deriv_idxs)
     assert type(bound_t_ls) is list
     assert type(x_0_ls) is list

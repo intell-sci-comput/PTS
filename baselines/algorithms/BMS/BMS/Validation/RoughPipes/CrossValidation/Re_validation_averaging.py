@@ -55,9 +55,7 @@ def parse_options():
 if __name__ == '__main__':
     # Arguments
     parser = parse_options()
-    opt, args = parser.parse_args() # opt 是一个对象，args 是一个列表，分别代表命令行中的参数和选项， arg 是一个列表，包含了所有的参数
-    # arg[0] 代表第一个参数，arg[1] 代表第二个参数，以此类推
-    # 在这里 arg[0] 代表 PPARFILE，也就是参数文件的路径，这个文件中包含了参数的先验分布的信息
+    opt, args = parser.parse_args()
     dset = 'RoughPipes'
     VARS = iodata.XVARS[dset]
     Y = iodata.YLABS[dset]

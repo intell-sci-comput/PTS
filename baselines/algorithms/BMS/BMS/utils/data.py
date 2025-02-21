@@ -59,32 +59,12 @@ def generate_X(ranges, down_sample, distrib='U'):
     n = min(num_points, down_sample)
     points = np.empty((n, num_dims))
 
-    # for i in range(n):
-    #     # 对第 i 个点进行采样
-    #     if distrib == 'U':
-    #         steps = [np.sort(np.random.uniform(start, stop, size=n_points))
-    #                  for start, stop, n_points in ranges]
-    #     elif distrib == 'E':
-    #         steps = [np.linspace(start, stop, num=n_points)
-    #                  for start, stop, n_points in ranges]
-    #     else:
-    #         raise ValueError('distrib should be U or E')
-    #     for j in range(num_dims):
-    #         # 对第 j 个维度进行采样
-    #         step = steps[j]
-    #         # 从 step 里随便采样一个数
-    #         val = np.random.choice(step)
-    #         points[i, j] = val
-    
     if distrib == 'U':
         for i in range(n):
-            # 对第 i 个点进行采样
             steps = [np.sort(np.random.uniform(start, stop, size=n_points))
                         for start, stop, n_points in ranges]
             for j in range(num_dims):
-                # 对第 j 个维度进行采样
                 step = steps[j]
-                # 从 step 里随便采样一个数
                 val = np.random.choice(step)
                 points[i, j] = val
     
@@ -93,9 +73,6 @@ def generate_X(ranges, down_sample, distrib='U'):
             raise ValueError('E distrib not support down_sample < n * num_dims')
         steps = [np.linspace(start, stop, num=n_points)
                  for start, stop, n_points in ranges]
-        
-        # steps 里面的 linspace 进行笛卡尔积
-        # 生成所有的点
         points = np.array(np.meshgrid(*steps)).T.reshape(-1, num_dims)
         
     else:
@@ -118,9 +95,6 @@ def get_dynamic_data(dataset_name, file_name):
     >>> 'h'
     '''
     df = pd.read_csv('./data/'+dataset_name+'/'+file_name+'.csv', header=None)
-    # NOTE: If use your own dataset, the column name cannot be `C` or `B`,
-    # because it's used as constant symbol in regressor
-    # 并且变量并都不可以有大写，因为 eval 的时候有 Lower case
     if dataset_name == 'ball':
         names = ['t', 'h']
         target_name = 'h'
@@ -164,20 +138,7 @@ def get_dynamic_data(dataset_name, file_name):
 
     return df, variables_name, target_name
 
-
-# def expr_to_Y_pred(expr_sympy, X, variables):
-#     ret = []
-#     for x in X:
-#         expr_sympy_temp = expr_sympy
-#         for i, v in enumerate(variables):
-#             expr_sympy_temp = expr_sympy_temp.subs(v, x[i])
-#         ret.append(expr_sympy_temp.evalf())
-#     Y_pred = np.array(ret).astype(dtype=np.float32).reshape(-1, 1)
-#     return Y_pred
-
 def expr_to_Y_pred(expr_sympy, X, variables):
-    '''用numpy重新计算表达式的MSE，因为PSRN的threshold会导致计算不准确
-    --> ndarray (n,1) '''
     functions = {
         'sin': np.sin,
         'cos': np.cos,
@@ -195,39 +156,19 @@ def expr_to_Y_pred(expr_sympy, X, variables):
         'e': np.exp(1),
         'pi': np.pi,
     }
-    # try:
-    #     expr_str = str(expr_sympy)
-    #     values = {variables[j]: X[:, j:j+1] for j in range(X.shape[1])}
-    #     pred = eval(expr_str.lower(), functions, values) * np.ones((X.shape[0], 1))
-    #     return pred
-    # except:
-    #     return np.nan
+
     expr_str = str(expr_sympy)
     values = {variables[j]: X[:, j:j+1] for j in range(X.shape[1])}
     pred = eval(expr_str.lower(), functions, values) * np.ones((X.shape[0], 1))
     return pred
-    # TODO 记得改回来 try
 
 def select_best_expr_from_pareto_front(expr_sympy_ls, X_test, Y_test, variables):
-    '''从一堆候选的表达式中选择出测试误差最小的表达式, 和mse'''
-    
-    # print(X_test.shape, Y_test.shape)
-    
     mse_ls = []
     for expr_sympy in expr_sympy_ls:
         Y_test_pred = expr_to_Y_pred(expr_sympy, X_test, variables)
-        # print(Y_test_pred.shape)
         mse = np.mean((Y_test_pred - Y_test) ** 2)
-        # print(mse)
         if np.isnan(mse):
             mse = 1e99
-            # print(Y_test_pred.shape)
-            # print(Y_test.shape)
-            # print(Y_test_pred[:5])
-            # print(Y_test[:5])
-            # print(Y_test_pred[-5:])
-            # print(Y_test[-5:])
         mse_ls.append(mse)
     idx = np.argmin(mse_ls)
     return expr_sympy_ls[idx], mse
-    
