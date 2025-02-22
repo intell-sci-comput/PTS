@@ -1,0 +1,250 @@
+{
+   "experiment": {
+      "logdir": "./log",
+      "seed": 0,
+      "timestamp": "2022-05-21-172142",
+      "task_name": "Nguyen-5",
+      "save_path": "./log/Nguyen-5_2022-05-21-172142"
+   },
+   "task": {
+      "task_type": "regression",
+      "dataset": "Nguyen-5",
+      "function_set": [
+         "add",
+         "sub",
+         "mul",
+         "div",
+         "sin",
+         "cos",
+         "exp",
+         "log"
+      ],
+      "metric": "inv_nrmse",
+      "metric_params": [
+         1.0
+      ],
+      "extra_metric_test": null,
+      "extra_metric_test_params": [],
+      "threshold": 1e-12,
+      "protected": false,
+      "reward_noise": 0.0,
+      "reward_noise_type": "r",
+      "normalize_variance": false,
+      "decision_tree_threshold_set": []
+   },
+   "training": {
+      "n_epochs": null,
+      "n_samples": 2000000,
+      "batch_size": 300,
+      "epsilon": null,
+      "baseline": "ewma_R",
+      "alpha": 0.5,
+      "b_jumpstart": false,
+      "n_cores_batch": 1,
+      "complexity": "token",
+      "const_optimizer": "scipy",
+      "const_params": {},
+      "verbose": true,
+      "debug": 0,
+      "early_stopping": true,
+      "hof": 100,
+      "use_memory": false,
+      "memory_capacity": 1000.0,
+      "warm_start": null,
+      "memory_threshold": null,
+      "save_all_epoch": false,
+      "save_summary": false,
+      "save_positional_entropy": false,
+      "save_pareto_front": true,
+      "save_cache": false,
+      "save_cache_r_min": 0.9,
+      "save_freq": 1,
+      "save_token_count": false
+   },
+   "state_manager": {
+      "observe_action": false,
+      "observe_parent": true,
+      "observe_sibling": true,
+      "observe_dangling": false,
+      "embedding": true,
+      "embedding_size": 16
+   },
+   "controller": {
+      "max_length": 256,
+      "cell": "lstm",
+      "num_layers": 1,
+      "num_units": 32,
+      "initializer": "zeros",
+      "learning_rate": 0.001,
+      "optimizer": "adam",
+      "entropy_weight": 0.03,
+      "entropy_gamma": 0.7,
+      "pqt": false,
+      "pqt_k": 10,
+      "pqt_batch_size": 1,
+      "pqt_weight": 200.0,
+      "pqt_use_pg": false,
+      "summary": false,
+      "rl_weight": 1.0
+   },
+   "gp_meld": {
+      "run_gp_meld": false,
+      "verbose": false,
+      "generations": 20,
+      "p_crossover": 0.5,
+      "p_mutate": 0.5,
+      "tournament_size": 5,
+      "train_n": 50,
+      "mutate_tree_max": 3
+   },
+   "prior": {
+      "relational": {
+         "targets": [],
+         "effectors": [],
+         "relationship": null
+      },
+      "length": {
+         "min_": 4,
+         "max_": 256
+      },
+      "repeat": {
+         "tokens": "const",
+         "min_": null,
+         "max_": 10
+      },
+      "inverse": {},
+      "trig": {},
+      "const": {},
+      "no_inputs": {},
+      "uniform_arity": {},
+      "soft_length": {
+         "loc": 10,
+         "scale": 5
+      }
+   },
+   "postprocess": {
+      "show_count": 5,
+      "save_plots": true
+   },
+   "model": "TransformerTreeEncoderController",
+   "function_names_str": "x1,add,sub,mul,div,sin,cos,exp,log",
+   "nesymres_train_config": {
+      "train_path": "data/datasets/100000",
+      "val_path": "data/raw_datasets/200",
+      "raw_test_path": "data/raw_datasets/200",
+      "test_path": "data/validation",
+      "model_path": "/local/home/lbiggio/NeuralSymbolicRegressionThatScales/weights/10MCompleted.ckpt",
+      "wandb": false,
+      "num_of_workers": 24,
+      "batch_size": 5,
+      "epochs": 20,
+      "val_check_interval": 1.0,
+      "precision": 16,
+      "gpu": 1,
+      "dataset_train": {
+         "total_variables": null,
+         "total_coefficients": null,
+         "max_number_of_points": 20,
+         "type_of_sampling_points": "constant",
+         "predict_c": false,
+         "fun_support": {
+            "max": 1,
+            "min": -1
+         },
+         "constants": {
+            "num_constants": 3,
+            "additive": {
+               "max": 2,
+               "min": -2
+            },
+            "multiplicative": {
+               "max": 2,
+               "min": -2
+            }
+         },
+         "padding_token": 9
+      },
+      "dataset_val": {
+         "total_variables": null,
+         "total_coefficients": null,
+         "max_number_of_points": 20,
+         "type_of_sampling_points": "constant",
+         "predict_c": false,
+         "fun_support": {
+            "max": 1,
+            "min": -1
+         },
+         "constants": {
+            "num_constants": 3,
+            "additive": {
+               "max": 2,
+               "min": -2
+            },
+            "multiplicative": {
+               "max": 5,
+               "min": 0.1
+            }
+         }
+      },
+      "dataset_test": {
+         "total_variables": null,
+         "total_coefficients": null,
+         "max_number_of_points": 20,
+         "type_of_sampling_points": "constant",
+         "predict_c": false,
+         "fun_support": {
+            "max": 1,
+            "min": -1
+         },
+         "constants": {
+            "num_constants": 3,
+            "additive": {
+               "max": 2,
+               "min": -2
+            },
+            "multiplicative": {
+               "max": 5,
+               "min": 0.1
+            }
+         }
+      },
+      "architecture": {
+         "sinuisodal_embeddings": false,
+         "dec_pf_dim": 32,
+         "dec_layers": 1,
+         "dim_hidden": 32,
+         "lr": 0.0001,
+         "dropout": 0,
+         "num_features": 1,
+         "ln": true,
+         "N_p": 0,
+         "num_inds": 64,
+         "activation": "relu",
+         "bit16": false,
+         "norm": true,
+         "linear": true,
+         "input_normalization": false,
+         "src_pad_idx": 0,
+         "trg_pad_idx": 0,
+         "length_eq": 256,
+         "n_l_enc": 3,
+         "mean": 0.5,
+         "std": 0.5,
+         "dim_input": 2,
+         "num_heads": 1,
+         "output_dim": 10
+      },
+      "inference": {
+         "beam_size": 2,
+         "bfgs": {
+            "activated": true,
+            "n_restarts": 10,
+            "add_coefficients_if_not_existing": false,
+            "normalization_o": false,
+            "idx_remove": true,
+            "normalization_type": "MSE",
+            "stop_time": 1000000000.0
+         }
+      }
+   }
+}

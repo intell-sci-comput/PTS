@@ -1,0 +1,245 @@
+nesymres:
+  function_set: ["abs", "arccos", "add", "arcsin", "arctan", "cos", "cosh", "coth", "div", "exp", "log", "mul", "sin", "sinh", "sqrt", "tan", "tanh", "inv", "neg", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5"]
+  dataset:
+    max_len: 20
+    #operators: "add:10,mul:10,sub:5,div:5,sqrt:4,pow2:4,pow3:2,pow4:1,pow5:1,ln:4,exp:4,sin:4,cos:4,tan:4,asin:2",
+    operators: "add:10,mul:10,sub:5,div:5,pow2:4,pow3:2,pow4:1,pow5:1,ln:4,exp:4,sin:4,cos:4"  # Koza
+    #operators: "add:10,mul:10,sub:5,div:5,pow2:4,pow3:2,pow4:1,pow5:1,ln:10,exp:4,sin:4,cos:4",  # Koza
+    max_ops: 5
+    rewrite_functions: ""
+    variables: ["x_1", "x_2", "x_3"]
+    eos_index: 1
+    pad_index: 0
+    equal_prob_independent_vars: True
+    remap_independent_vars_to_monotic: True
+    force_all_independent_present: True
+    max_independent_vars: 16
+    lower_nbs_ops: 3
+    # create_eqs_with_constants: False
+    create_eqs_with_constants: True
+    train_path: data/datasets/100000
+  val_path: data/raw_datasets/200
+  raw_test_path: data/raw_datasets/200
+  test_path: data/validation
+  model_path: /local/home/lbiggio/NeuralSymbolicRegressionThatScales/weights/10MCompleted.ckpt
+
+  wandb: False
+  num_of_workers: 24
+  batch_size: 150
+  epochs: 20
+  val_check_interval: 1.0
+  precision: 16
+  gpu: 1
+
+  dataset_train:
+    total_variables: #Do not fill
+    total_coefficients: #Do not fill
+    max_number_of_points: 20 #2000 before
+    type_of_sampling_points: constant #logarithm
+    # predict_c: True
+    predict_c: True
+    fun_support:
+      max: 1
+      min: -1
+    constants:
+      num_constants: 3
+      additive:
+        max: 2
+        min: -2
+      multiplicative:
+        max: 2
+        min: -2
+
+  dataset_val:
+    total_variables: #Do not fill
+    total_coefficients: #Do not fill
+    max_number_of_points: 20
+    type_of_sampling_points: constant
+    predict_c: True
+    fun_support:
+      max: 1
+      min: -1
+    constants:
+      num_constants: 3
+      additive:
+        max: 2
+        min: -2
+      multiplicative:
+        max: 5
+        min: 0.1
+
+  dataset_test:
+    total_variables: #Do not fill
+    total_coefficients: #Do not fill
+    max_number_of_points: 20
+    type_of_sampling_points: constant
+    # predict_c: True
+    predict_c: True
+    fun_support:
+      max: 1
+      min: -1
+    constants:
+      num_constants: 3
+      additive:
+        max: 2
+        min: -2
+      multiplicative:
+        max: 5
+        min: 0.1
+
+  architecture:
+    sinuisodal_embeddings: False
+    dec_pf_dim: 32
+    dec_layers: 1
+    dim_hidden: 32
+    lr: 0.0001
+    dropout: 0
+    num_features: 2
+    ln: True
+    N_p: 0
+    num_inds: 50
+    activation: "relu"
+    bit16: True
+    norm: True
+    linear: False
+    input_normalization: False
+    src_pad_idx: 0
+    trg_pad_idx: 0
+    length_eq: 20
+    n_l_enc: 5
+    mean: 0.5
+    std: 0.5
+    dim_input: 4
+    num_heads: 2
+    output_dim: 10
+
+  inference:
+    beam_size: 2
+    bfgs:
+      activated: True
+      n_restarts: 10
+      add_coefficients_if_not_existing: False
+      normalization_o: False
+      idx_remove: True
+      normalization_type: MSE
+      stop_time: 1e9
+
+
+task:
+  task_type: regression
+  function_set:
+  - add
+  - sub
+  - mul
+  - div
+  - sin
+  - cos
+  - exp
+  - log
+  - const
+training:
+  n_samples: 2000000
+  batch_size: 500
+  epsilon: 0.02
+  n_cores_batch: 1
+  alpha: 0.5
+controller:
+  learning_rate: 0.0025
+  entropy_weight: 0.03
+  entropy_gamma: 0.7
+  max_length: 30
+  pqt_k: 10
+prior:
+  length:
+    min_: 4
+    max_: 30
+    'on': true
+  repeat:
+    tokens: const
+    min_: null
+    max_: 10
+    'on': true
+  inverse:
+    'on': true
+  trig:
+    'on': true
+  const:
+    'on': true
+  no_inputs:
+    'on': true
+  uniform_arity:
+    'on': false
+  soft_length:
+    loc: 10
+    scale: 5
+    'on': true
+gp_meld:
+  run_gp_meld: true
+  generations: 25
+  p_crossover: 0.5
+  p_mutate: 0.5
+  tournament_size: 5
+  train_n: 50
+  mutate_tree_max: 3
+
+exp:
+  noise: 0.0
+  dataset_size_multiplier: 1.0
+  n_samples: 2_000_000
+  test_sample_multiplier: 1
+  learning_rate: 0.001
+  function_set: #Do not fill
+  priority_queue_training: true
+  model_pre_training_path: ""
+  run_pool_programs_test: false
+  seed_start: 0
+  seed_runs: 1
+  n_cores_task: 1
+  baselines: ["DGSR-PRE-TRAINED", "DSO", "GP"]
+  # baselines: ["DGSR-PRE-TRAINED"]
+  benchmark: "fn_d_all"
+  benchmark_path: "./libs/sd3/dso/dso/task/regression/benchmarks.csv"
+  # benchmark_path: "./libs/sd3/dso/dso/task/regression/benchmarks_qsrn.csv"
+  save_true_log_likelihood: false
+
+model:
+  embedding: True
+  embedding_size: 16
+  num_units: 32
+  batch_size: 1000
+  n_objects: 1
+  has_encoder: true
+  rl_weight: 1.0
+  randomize_ce: false
+  enc_layers: 3
+  dec_layers: 2
+  dropout: 0
+  nhead: 1
+  gp_meld: true
+  dim_feedforward_multiplier: 4
+  activation: 'relu' # 'elu', or 'tanh' could be good ?!
+  encoder_arch:
+    sinuisodal_embeddings: False
+    dec_pf_dim: 32
+    dec_layers: 1
+    # dim_hidden: 32 Set automatically
+    # lr: 0.0001
+    dropout: 0
+    num_features: 1 # 2 seems good
+    ln: True
+    N_p: 0
+    num_inds: 64 #50
+    activation: "relu"
+    bit16: False # True seems good
+    norm: True
+    linear: True # False seems good
+    input_normalization: False
+    src_pad_idx: 0
+    trg_pad_idx: 0
+    # length_eq: 20
+    n_l_enc: 3 #5
+    mean: 0.5
+    std: 0.5
+    # dim_input: 4
+    # num_heads: 1 # Set automatically
+    output_dim: 10

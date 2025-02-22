@@ -1,0 +1,4 @@
+data/**/*.csv
+data/chaotic/*.csv
+log/
+logs/
