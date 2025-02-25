@@ -243,7 +243,7 @@ def evaluate_pmlb_mcts(
             rescale=params.rescale,
         )
 
-        problem_names = os.listdir("data/transformed")
+        problem_names = os.listdir("../../../data/transformed")
         first_write = True
         if save:
             save_file = save_suffix
@@ -254,7 +254,7 @@ def evaluate_pmlb_mcts(
         for problem_name in problem_names:
                 
             formula = "???"
-            data = np.loadtxt(f"data/transformed/{problem_name}", delimiter=',')
+            data = np.loadtxt(f"../../../data/transformed/{problem_name}", delimiter=',')
             X = data[:,:-1]
             y = np.expand_dims(data[:,-1], -1)
 

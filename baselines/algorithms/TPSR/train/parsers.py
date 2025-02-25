@@ -18,7 +18,7 @@ def get_parser():
 
     # main parameters
     parser.add_argument(
-        "--dump_path", type=str, default="", help="Experiment dump path"
+        "--dump_path", type=str, default="checkpoints", help="Experiment dump path"
     )
     parser.add_argument(
         "--refinements_types",

@@ -16,7 +16,12 @@ from evaluate import evaluate_pmlb, evaluate_pmlb_mcts, evaluate_in_domain, eval
 if __name__ == '__main__':
     #load E2E model
     
-    model_path = "periodic-0.pth" 
+    model_path = "../train/checkpoint"
+    for itm in os.listdir(model_path):
+        if itm.endswith("pkl"):
+            model_path += '/'+itm
+            break
+         
     try:
         if not os.path.isfile(model_path): 
             url = "https://dl.fbaipublicfiles.com/symbolicregression/model1.pt"
