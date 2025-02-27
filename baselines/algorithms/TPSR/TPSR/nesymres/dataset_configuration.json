@@ -1,0 +1,9 @@
+{
+    "max_len": 20,
+    "operators": "add:10,mul:10,sub:5,div:5,sqrt:4,pow2:4,pow3:2,pow4:1,pow5:1,ln:4,exp:4,sin:4,cos:4,tan:4,asin:2",
+    "max_ops": 5,
+    "rewrite_functions": "",
+    "variables": ["x_1","x_2","x_3"], 
+    "eos_index": 1,
+    "pad_index": 0
+}

@@ -1,0 +1,14 @@
+defaults:
+  - model: nesymres
+
+test_path: data/validation
+name: results
+benchmark_path: test_set/nc.csv
+equation_idx: 0
+
+hydra:
+  sweep:
+      dir: runs/${model.model_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  overrides:
+      task:
+        - equation_idx=range(0,200)  

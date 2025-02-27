@@ -1,0 +1,50 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=46.1.0"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "libs"]
+
+[tool.black]
+extend-exclude = """
+^/libs
+"""
+include = '\.pyi?$'
+line-length = 120
+target-version = ['py38', 'py39', 'py310']
+
+[tool.isort]
+extend_skip_glob = "libs"
+known_first_party = """
+config,
+datasets,
+exp_main,
+run_pretrain,
+run_recovery_multi,
+test,
+unit_test,
+models,
+process_results,
+test,
+utils
+"""
+profile = "black"
+src_paths = ["datasets,models,process_results,test,utils"]
+
+[tool.pylint]
+disable = """
+R,
+C,
+fixme,
+unused-argument,
+protected-access,
+attribute-defined-outside-init,
+import-error,
+redefined-outer-name,
+logging-format-interpolation,
+unspecified-encoding,
+logging-fstring-interpolation
+"""
+generated-members = "torch.*"
+
+# ignored-modules = "scipy.special"

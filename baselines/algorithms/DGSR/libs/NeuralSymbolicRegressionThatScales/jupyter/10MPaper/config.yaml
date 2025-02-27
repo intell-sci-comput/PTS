@@ -1,0 +1,111 @@
+train_path: data/dataset/100000000
+val_path: data/validation
+
+raw_test_path: data/raw_datasets/150
+test_path: data/validation
+model_path: /local/home/lbiggio/NeuralSymbolicRegressionThatScales/weights/10MCompleted.ckpt  
+
+wandb: True
+num_of_workers: 28
+batch_size: 25
+epochs: 20
+val_check_interval: 0.02
+precision: 16
+
+dataset_train:
+  total_variables: #Do not fill
+  total_coefficients: #Do not fill
+  max_number_of_points: 800  #2000 before
+  type_of_sampling_points: logarithm
+  predict_c: True
+  fun_support:
+    max: 10
+    min: -10
+  constants:
+    num_constants: 3
+    additive:
+      max: 2
+      min: -2
+    multiplicative:
+      max: 5
+      min: 0.1
+
+dataset_val:
+  total_variables: #Do not fill
+  total_coefficients: #Do not fill
+  max_number_of_points: 500
+  type_of_sampling_points: constant
+  predict_c: True
+  fun_support:
+    max: 10
+    min: -10
+  constants:
+    num_constants: 3
+    additive:
+      max: 2
+      min: -2
+    multiplicative:
+      max: 5
+      min: 0.1
+
+dataset_test:
+  total_variables: #Do not fill
+  total_coefficients: #Do not fill
+  max_number_of_points: 500
+  type_of_sampling_points: constant
+  predict_c: False
+  fun_support:
+    max: 10
+    min: -10
+  constants:
+    num_constants: 3
+    additive:
+      max: 2
+      min: -2
+    multiplicative:
+      max: 5
+      min: 0.1
+
+architecture:
+  sinuisodal_embeddings: False
+  dec_pf_dim: 512
+  dec_layers: 2
+  dim_hidden: 512  
+  lr: 0.0001
+  num_features: 10
+  ln: True
+  N_p: 0
+  num_inds: 50
+  activation: "relu"
+  bit16: True
+  norm: True
+  linear: False
+  input_normalization: False
+  src_pad_idx: 0
+  trg_pad_idx: 0
+  length_eq: 60
+  n_l_enc: 2
+  mean: 0.5  
+  std: 0.5 
+  dim_input: 4
+  num_heads: 8
+  output_dim: 60
+  dropout: 0
+  beam_size: 2
+
+inference:
+  bfgs:
+    activated: True
+    n_restarts: 10
+    add_coefficients_if_not_existing: False
+    normalization_o: False
+    idx_remove: True
+    normalization_type: MSE
+    stop_time: 1e9
+
+# @package _group_
+hydra:
+  run:
+    dir: run/${dataset_train.predict_c}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+      dir: runs/${dataset_train.predict_c}/${now:%Y-%m-%d}/${now:%H-%M-%S}

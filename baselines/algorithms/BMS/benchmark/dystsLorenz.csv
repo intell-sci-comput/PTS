@@ -1,0 +1,4 @@
+name,dimension,constant,distribution,range,expression,params
+Lorenz_xdot,3,1,NA,NA,-a * (x1 - x0),"{'a': 10, 'b': 28, 'c': 2.667}"
+Lorenz_ydot,3,1,NA,NA,x0 * (b - x2) - x1,"{'a': 10, 'b': 28, 'c': 2.667}"
+Lorenz_zdot,3,1,NA,NA,x0 * x1 - c * x2,"{'a': 10, 'b': 28, 'c': 2.667}"

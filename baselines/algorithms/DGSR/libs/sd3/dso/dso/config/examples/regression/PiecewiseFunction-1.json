@@ -1,0 +1,17 @@
+{
+   "task": {
+      "task_type" : "regression",
+      "function_set": ["add", "sub", "mul", "div", "sin", "cos", "sqrt"],
+      "dataset" : "task/regression/data/PiecewiseFunction-1.csv",
+      // "dataset" : "task/regression/data/Nguyen-7_n0.05_d10.csv",
+      "protected" : true,
+      "decision_tree_threshold_set" : [-0.6, -0.3, 0.0, 0.3, 0.6]
+   },
+   "prior": {
+      "state_checker" : { "on" : true }
+   },
+   "training": {
+      "n_samples": 2000000,
+      "batch_size": 1000
+   }
+}
