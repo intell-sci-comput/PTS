@@ -1,12 +1,8 @@
-# PTS
-
-Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
+# 🌳 Discovering Symbolic Expressions with Parallelized Tree Search (PTS)
 
 ![fig1.png](./assets/fig1.png)
 
-
-
-## Installation
+## 📥 Installation
 
 ### Step 1: Create an Environment and Install PyTorch
 
@@ -23,13 +19,13 @@ conda activate PSRN
 pip install -r requirements.txt
 ```
 
-Notes: 
+### ⚠️ Important Notes
 
 - If using a version of PyTorch below 2.0, an error may occur during the `torch.topk` operation.
-- The experiments were performed on servers with Nvidia A100 (80GB) and Intel(R) Xeon(R) Platinum 8380 cpus @ 2.30GHz.
+- The experiments were performed on servers with Nvidia A100 (80GB) and Intel(R) Xeon(R) Platinum 8380 CPUs @ 2.30GHz.
 - We recommend using a high-memory GPU as smaller cards may encounter CUDA memory errors under our experimental settings. If you experience memory issues, consider reducing the number of input slots or opting for `semi_koza` operator sets (e.g., replacing `"Sub"` and `"Div"` with `"SemiSub"` and `"SemiDiv"`) or `basic` operator sets (e.g., replacing `"Sub"` and `"Div"` with `"Neg"` and `"Inv"`).
 
-## Quickstart with Custom Data
+## 🚀 Quickstart with Custom Data
 
 To execute the script with custom data, use the following arguments:
 
@@ -41,50 +37,48 @@ To execute the script with custom data, use the following arguments:
 
 For more detailed parameter settings, please refer to the `run_custom_data.py` script.
 
-### Examples
+### 📝 Examples
 
-To run the script with custom data with an expression probe (the algorithm will stop when it finds the expression or its symbolic equivalents), use:
+To run the script with custom data with an expression probe (the algorithm will stop when it finds the expression or its symbolic equivalents):
 
 ```bash
 python run_custom_data.py -g 0 -i 5 -c False --probe "(exp(x)-exp(-x))/2"
 ```
 
-Without an expression probe, use:
+Without an expression probe:
 
 ```bash
 python run_custom_data.py -g 0 -i 5 -c False
 ```
 
-In case of limited VRAM (or the ground truth expression is expected to be simple), consider reducing the input size with this command:
+For limited VRAM (or when the ground truth expression is expected to be simple):
 
 ```bash
 python run_custom_data.py -g 0 -i 3 -c False --probe "(exp(x)-exp(-x))/2"
 ```
 
-To customize the operator library, you can specify it like so (may need to generate dr_mask first):
+To customize the operator library:
 
 ```bash
 python run_custom_data.py -g 0 -i 5 -c False --probe "(exp(x)-exp(-x))/2" -l "['Add','Mul','Identity','Tanh','Abs']"
 ```
-_Note: if use GP as the token generator, you may also need to change the operator that GP used in `token_generator_config.yaml`_
+_Note: If using GP as the token generator, you may also need to change the operator that GP uses in `token_generator_config.yaml`_
 
-For custom data paths, specify the CSV path as follows:
+For custom data paths:
 
 ```bash
 python run_custom_data.py -g 0 -i 5 -c False --probe "(exp(x)-exp(-x))/2" --csvpath ./another_custom_data.csv
 ```
 
-### Note
+### 📋 Note on DR Mask Files
 
-The `.npy` files under `./dr_mask` are pre-generated. When you try to use a new network architecture (e.g., a new combination of operators, number of variables, and number of layers), you may need to run the gen_dr_mask.py script first. Typically, this process takes less than a minute.
-
-For example:
+The `.npy` files under `./dr_mask` are pre-generated. When you try to use a new network architecture (e.g., a new combination of operators, number of variables, and number of layers), you may need to run the gen_dr_mask.py script first. Typically, this process takes less than a minute:
 
 ```bash
 python utils/gen_dr_mask.py --n_symbol_layers=3 --n_inputs=5 --ops="['Add','Mul','SemiSub','SemiDiv','Identity','Sin','Cos','Exp','Log','Tanh','Cosh','Abs','Sign']"
 ```
 
-## Custom Stages
+## ⚙️ Custom Stages
 
 If you want to customize the operators, the number of PSRN inputs, and configure custom search stages, you can edit the `.yaml` files under the `model/stages_config` directory, or pass a dictionary directly to the `stage_config=...` field when instantiating the `PSRN_Regressor`.
 
@@ -105,7 +99,7 @@ stages:
 
 Explanation: First, set the default stage parameters in `default`. Then, design the specific search workflow in `stages`. An empty pair of curly braces `{}` indicates a stage that uses the default parameters.
 
-## Symbolic Regression Benchmark
+## 📊 Symbolic Regression Benchmark
 
 To reproduce our experiments, execute the following command:
 
@@ -121,9 +115,9 @@ python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark_Feynman.csv
 
 The Pareto optimal expressions and corresponding statistics for each puzzle are available in the `log/benchmark` directory. Additionally, the expected runtime for each puzzle can be found in the supplementary materials.
 
-## Chaotic Dynamics
+## 🔄 Chaotic Dynamics
 
-Discovering the dynamics of chaotic systems by running the following command
+Discover the dynamics of chaotic systems by running:
 
 ```bash
 python run_chaotic.py --n_runs 50 -g 0     # Using GPU index 0
@@ -131,9 +125,9 @@ python run_chaotic.py --n_runs 50 -g 0     # Using GPU index 0
 
 This script will generate Pareto optimal expressions for each derivative, and the outcomes will be stored in the `log/chaotic` directory.
 
-### Evaluating Symbolic Recovery
+### 📈 Evaluating Symbolic Recovery
 
-Then, you can assess the symbolic recovery rate by executing:
+Assess the symbolic recovery rate by executing:
 
 ```bash
 python result_analyze_chaotic.py
@@ -141,7 +135,7 @@ python result_analyze_chaotic.py
 
 This analysis will automatically compute and save the statistics to `log/chaotic_symbolic_recovery/psrn_stats.csv`
 
-## Realworld Data - EMPS
+## 🔬 Realworld Data - EMPS
 
 ```bash
 python run_realworld_EMPS.py --n_runs 20 -g 0    # Using GPU index 0
@@ -149,7 +143,7 @@ python run_realworld_EMPS.py --n_runs 20 -g 0    # Using GPU index 0
 
 The results (Pareto optimal expressions) can be found in `log/EMPS`
 
-## Realworld Data - turbulent friction
+## 🔬 Realworld Data - Turbulent Friction
 
 ```bash
 python run_realworld_roughpipe.py --n_runs 20 -g 0     # Using GPU index 0
@@ -157,9 +151,9 @@ python run_realworld_roughpipe.py --n_runs 20 -g 0     # Using GPU index 0
 
 The results (Pareto optimal expressions) can be found in `log/roughpipe`
 
-## Ablation Studies
+## 🧪 Ablation Studies
 
-To reproduce our ablation studies, execute the following command.
+To reproduce our ablation studies, execute the following commands.
 The results will be stored in the `log/` directory.
 
 ### Token Generator Ablation
@@ -187,17 +181,21 @@ python study_ablation/drmask/run_without_drmask.py --use_drmask True -g 0
 python study_ablation/drmask/run_without_drmask.py --use_drmask False -g 0
 ```
 
-# SRbench Evaluation
+## 🏆 SRbench Evaluation
 
 To evaluate PTS's performance on SRbench, follow these steps:
 
-1. Copy the `PTS_srbench` directory into the `algorithm` folder of your SRbench installation.
+1. Copy the `SRBenchRegressor` directory into the `algorithm` folder of your SRbench installation.
 
 2. Follow the standard SRbench instructions to run our algorithm.
 
 This setup will allow you to benchmark PTS using the SRbench, providing a standardized evaluation of its performance alongside other symbolic regression algorithms.
 
-## Citation
+
+![SRbench.png](./assets/SRbench.png)
+
+
+## 📚 Citation
 
 If you use this work, please cite:
 
