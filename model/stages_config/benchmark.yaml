@@ -1,0 +1,16 @@
+default:
+  operators: ['Add', 'Mul', 'SemiSub', 'SemiDiv', 'Identity', 'Sin', 'Cos', 'Exp', 'Log']
+  time_limit: 900  # 60 * 15
+  n_psrn_inputs: 7
+  n_sample_variables: 5
+
+stages:
+  - {time_limit: 5, n_psrn_inputs: 5}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}

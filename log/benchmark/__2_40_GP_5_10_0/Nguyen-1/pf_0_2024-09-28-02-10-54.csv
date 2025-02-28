@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+x1*(x1*(x1 + 1) + 1),0.9605959310780795,6.750156e-15,4

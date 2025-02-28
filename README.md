@@ -1,18 +1,9 @@
-# PTS (Parallelized Tree Search) / PSRN (Parallel Symbolic Regression Network)
+# PTS
 
-[![arXiv](https://img.shields.io/badge/arXiv-2407.04405-b31b1b.svg?style=for-the-badge)](https://arxiv.org/abs/2407.04405)
+Code for "Discovering Symbolic Expressions with Parallelized Tree Search (PTS)"
 
-Official PyTorch implementation of ["Discovering Symbolic Expressions with Parallelized Tree Search"](https://arxiv.org/abs/2407.04405)
+![fig1.png](./assets/fig1.png)
 
-[Ruan, Kai and Gao, Ze-Feng and Guo, Yike and Sun, Hao and Wen, Ji-Rong and Liu, Yang, "Discovering symbolic expressions with parallelized tree search"](https://arxiv.org/abs/2407.04405)
-
-PTS (Parallelized Tree Search) with its core component PSRN (Parallel Symbolic Regression Network) is a novel symbolic regression framework featuring:
-
-- **Scalable**: Evaluates hundreds of millions of candidate expressions within seconds
-- **Efficient**: Automatically identifies and reuses common subtrees to avoid redundant computation  
-- **Fast**: Leverages GPU parallelization for massive expression evaluation
-
-![Architecture](./assets/fig1.png)
 
 
 ## Installation
@@ -20,7 +11,7 @@ PTS (Parallelized Tree Search) with its core component PSRN (Parallel Symbolic R
 ### Step 1: Create an Environment and Install PyTorch
 
 ```bash
-conda create -n PSRN python=3.8 "pytorch>=2.0.0" pytorch-cuda=12.1 -c pytorch -c nvidia
+conda create -n PSRN python=3.9 "pytorch>=2.0.0" pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 _Note: Adjust the `pytorch-cuda` version as necessary based on your GPU's CUDA version._
@@ -29,7 +20,7 @@ _Note: Adjust the `pytorch-cuda` version as necessary based on your GPU's CUDA v
 
 ```bash
 conda activate PSRN
-pip install pandas==1.5.3 click==8.0.4 dysts==0.1 numpy==1.22.3 scipy==1.7.3 tqdm==4.65.0 pysindy==1.7.5 derivative==0.6.0 scikit-learn==1.3.0 sympy==1.10.1
+pip install -r requirements.txt
 ```
 
 Notes: 
@@ -64,16 +55,10 @@ Without an expression probe, use:
 python run_custom_data.py -g 0 -i 5 -c False
 ```
 
-To activate 2 constant tokens during each forward pass in PSRN, enter:
-
-```bash
-python run_custom_data.py -g 0 -i 5 -c True -n 2 --probe "(exp(x)-exp(-x))/2"
-```
-
 In case of limited VRAM (or the ground truth expression is expected to be simple), consider reducing the input size with this command:
 
 ```bash
-python run_custom_data.py -g 0 -i 2 -c False --probe "(exp(x)-exp(-x))/2"
+python run_custom_data.py -g 0 -i 3 -c False --probe "(exp(x)-exp(-x))/2"
 ```
 
 To customize the operator library, you can specify it like so (may need to generate dr_mask first):
@@ -81,6 +66,7 @@ To customize the operator library, you can specify it like so (may need to gener
 ```bash
 python run_custom_data.py -g 0 -i 5 -c False --probe "(exp(x)-exp(-x))/2" -l "['Add','Mul','Identity','Tanh','Abs']"
 ```
+_Note: if use GP as the token generator, you may also need to change the operator that GP used in `token_generator_config.yaml`_
 
 For custom data paths, specify the CSV path as follows:
 
@@ -98,18 +84,39 @@ For example:
 python utils/gen_dr_mask.py --n_symbol_layers=3 --n_inputs=5 --ops="['Add','Mul','SemiSub','SemiDiv','Identity','Sin','Cos','Exp','Log','Tanh','Cosh','Abs','Sign']"
 ```
 
+## Custom Stages
+
+If you want to customize the operators, the number of PSRN inputs, and configure custom search stages, you can edit the `.yaml` files under the `model/stages_config` directory, or pass a dictionary directly to the `stage_config=...` field when instantiating the `PSRN_Regressor`.
+
+Example:
+
+```yaml
+default:
+  operators: ['Add', 'Mul', 'SemiSub', 'SemiDiv', 'Identity', 'Sin', 'Cos', 'Exp', 'Log']
+  time_limit: 900  # 60 * 15
+  n_psrn_inputs: 7
+  n_sample_variables: 5
+
+stages:
+  - {time_limit: 5, n_psrn_inputs: 5}
+  - {}
+  - {}
+```
+
+Explanation: First, set the default stage parameters in `default`. Then, design the specific search workflow in `stages`. An empty pair of curly braces `{}` indicates a stage that uses the default parameters.
+
 ## Symbolic Regression Benchmark
 
 To reproduce our experiments, execute the following command:
 
 ```bash
-python run_benchmark_all.py --n_runs 100 -g 0 -l koza -i 5 -b benchmark.csv
+python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark.csv
 ```
 
 For the Feynman expressions:
 
 ```bash
-python run_benchmark_all.py --n_runs 100 -g 0 -l semi_koza -i 6 -b benchmark_Feynman.csv
+python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark_Feynman.csv
 ```
 
 The Pareto optimal expressions and corresponding statistics for each puzzle are available in the `log/benchmark` directory. Additionally, the expected runtime for each puzzle can be found in the supplementary materials.
@@ -155,34 +162,41 @@ The results (Pareto optimal expressions) can be found in `log/roughpipe`
 To reproduce our ablation studies, execute the following command.
 The results will be stored in the `log/` directory.
 
-### MCTS Ablation
+### Token Generator Ablation
 
 ```bash
-python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 100 -g 0 -l koza -i 5 -r False
-python study_ablation/mcts/run_random.py -x ablation_mcts --n_runs 100 -g 0 -l koza -i 5 -r True
+python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark.csv -t MCTS
+python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark.csv -t GP
+python run_benchmark_all.py --n_runs 100 -g 0 -b benchmark.csv -t Random
 ```
 
 ### Constant Range Sensitivity
 
 ```bash
-python study_ablation/constants/run_c_experiments.py --n_runs 20 -g 0 
+python study_ablation/constants/run_c_experiments.py --n_runs 20 -g 0 -t GP
+python study_ablation/constants/run_c_experiments.py --n_runs 20 -g 0 -t MCTS
 ```
 
 ### DR Mask Ablation
 
-You can modify the operator library using the `-l` flag, adjust the number of input slots with `-i`, and choose whether to use the DR Mask.
+You can modify the operator library and adjust the number of input slots in yaml file, and choose whether to use the DR Mask.
 While the script is running, monitor the memory footprint using nvidia-smi or nvitop.
 
 ```bash
-python study_ablation/drmask/run_without_drmask.py --use_drmask True -i 4 -l koza -g 0
-python study_ablation/drmask/run_without_drmask.py --use_drmask False -i 4 -l koza -g 0
+python study_ablation/drmask/run_without_drmask.py --use_drmask True -g 0
+python study_ablation/drmask/run_without_drmask.py --use_drmask False -g 0
 ```
 
-### Robustness to Noise
+# SRbench Evaluation
 
-```bash
-python study_ablation/noise/run_noise.py --experiment_name=noise --n_runs 100 -g 0 -l arithmetic -b benchmark_noise.csv
-```
+To evaluate PTS's performance on SRbench, follow these steps:
+
+1. Copy the `PTS_srbench` directory into the `algorithm` folder of your SRbench installation.
+
+2. Follow the standard SRbench instructions to run our algorithm.
+
+This setup will allow you to benchmark PTS using the SRbench, providing a standardized evaluation of its performance alongside other symbolic regression algorithms.
+
 ## Citation
 
 If you use this work, please cite:

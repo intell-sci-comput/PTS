@@ -1,0 +1,16 @@
+default:
+  operators: ['Add','Mul','SemiSub','SemiDiv', 'Identity','Neg','Inv','Sin','Cos','Exp','Log','Sqrt','Pow3']
+  time_limit: 600
+  n_psrn_inputs: 6
+  n_sample_variables: 3
+
+stages:
+  - {time_limit: 5, n_psrn_inputs: 4}
+  - {}
+  - {n_sample_variables: 2}
+  - {operators: ['Add','Mul','SemiSub','Identity','Inv','Sin','Cos','Exp','Log','Sqrt','Pow3'], n_psrn_inputs: 8, n_sample_variables: 4}
+  - {operators: ['Add','Mul','SemiDiv','Identity','Neg','Sin','Cos','Exp','Log','Sqrt','Pow3'], n_psrn_inputs: 8, n_sample_variables: 4}
+  - {}
+  - {n_sample_variables: 2}
+  - {operators: ['Add','Mul','SemiSub','Identity','Inv','Sin','Cos','Exp','Log','Sqrt','Pow3'], n_psrn_inputs: 8, n_sample_variables: 4}
+  - {operators: ['Add','Mul','SemiDiv','Identity','Neg','Sin','Cos','Exp','Log','Sqrt','Pow3'], n_psrn_inputs: 8, n_sample_variables: 4}

@@ -1,0 +1,38 @@
+GP:
+  base:
+    verbose: true
+    epoch: 10
+    has_const: true
+    const_optimize: false
+    tokens:
+      - Add
+      - Sub
+      - Mul
+      - Div
+      - Exp
+      - Log
+      - Cos
+      - Sin
+      - Sqrt
+    reward_end_threshold: 1.0e-5
+
+  gp:
+    tournsize: 10
+    max_height: 10
+    max_const: 5
+    cxpb: 0.1
+    mutpb: 0.5
+    pops: 50
+    times: 20
+    hof_size: 20
+    token_discount: 0.99
+    
+MCTS:
+  trying_const_num: 2
+  trying_const_n_try: 3
+  dc: 0.1
+
+Random:
+  maxdepth: 3 
+  n_const: 2
+  const_range: [-3, 3]

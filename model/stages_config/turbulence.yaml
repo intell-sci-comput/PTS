@@ -1,0 +1,8 @@
+default:
+  operators: ['Add','Mul', 'Sub','SemiDiv','Identity','Pow2','Pow3','Cos','Cosh','Exp','Log','Sin','Tanh']
+  time_limit: 90 
+  n_psrn_inputs: 5
+  n_sample_variables: 3
+
+stages:
+  - {}  # use default single phase

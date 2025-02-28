@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+exp(x2*log(x1)),0.9320653108424143,1.5813404e-15,7

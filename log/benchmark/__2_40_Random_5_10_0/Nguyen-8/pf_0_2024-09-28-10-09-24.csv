@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+sqrt(x1),0.960595984394346,7.1054275e-16,4

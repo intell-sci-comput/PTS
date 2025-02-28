@@ -1,0 +1,3 @@
+name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
+Nguyen-12,True,813.0539608001709,,6.095912e-16,0.9043820526797014,10,x1**4 - x1**3 + x2*(x2 - 2)/2,x1**4 - x1**3 + x2**2/2 - x2,x1**4 - x1**3 + x2*(x2 - 2)/2,x1**4 - x1**3 + x2**2/2 - x2
+Nguyen-12,True,635.2162148952484,,2.8702736e-16,0.9043820596868706,10,x1**3*(x1 - 1) + x2**2/2 - x2,x1**4 - x1**3 + x2**2/2 - x2,x1**3*(x1 - 1) + x2**2/2 - x2,x1**4 - x1**3 + x2**2/2 - x2
