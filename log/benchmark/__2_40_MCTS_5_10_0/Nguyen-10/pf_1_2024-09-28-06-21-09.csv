@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-sin(2*x1)*cos(x2)/cos(x1),0.8775209741657871,3.0968132e-15,13

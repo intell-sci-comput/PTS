@@ -6,3 +6,4 @@
 notebooks/*
 *.pyc
 model.pt
+log/*

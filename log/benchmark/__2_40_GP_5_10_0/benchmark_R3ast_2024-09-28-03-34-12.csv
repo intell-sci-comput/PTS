@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-R3ast,True,5.699539661407471,,1.3165647e-11,0.8775178389696082,13,x1**4*(x1**2 - 1)/(x1**4 - 1/x1),x1**5*(x1**2 - 1)/(x1**5 - 1),x1**4*(x1**2 - 1)/(x1**4 - 1/x1),x1**5*(x1**2 - 1)/(x1**5 - 1)
-R3ast,True,1.569183111190796,,6.743055e-12,0.8687435568684581,14,x1**3*(x1**2 - 1)/(x1**3 - 1/x1**2),x1**5*(x1**2 - 1)/(x1**5 - 1),x1**3*(x1**2 - 1)/(x1**3 - 1/x1**2),x1**5*(x1**2 - 1)/(x1**5 - 1)

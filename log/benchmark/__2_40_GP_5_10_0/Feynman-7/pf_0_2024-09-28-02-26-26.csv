@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-x1*x2*log(x1**3)/log(x1**2),0.8687445778440449,2.020677e-12,14

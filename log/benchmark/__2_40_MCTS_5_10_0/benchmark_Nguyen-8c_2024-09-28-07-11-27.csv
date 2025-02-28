@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Nguyen-8c,True,1530.5132958889008,,1.08357766e-14,0.9702988989967011,3,1.11*x1**0.5,1.11*x1**0.5,1.11*sqrt(x1),1.11*sqrt(x1)
-Nguyen-8c,True,49.63348126411438,,5.7287506e-15,0.9702989265595194,3,1.11*x1**0.5,1.11*x1**0.5,1.11*x1**0.5,1.11*x1**0.5

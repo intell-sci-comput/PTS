@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Feynman-5,True,2.021606683731079,,5.0603967e-15,0.980099930279155,2,x1/x2,x1/x2,x1/x2,x1/x2
-Feynman-5,True,1.920776128768921,,4.476419e-15,0.9800999344253871,2,x1/x2,x1/x2,x1/x2,x1/x2

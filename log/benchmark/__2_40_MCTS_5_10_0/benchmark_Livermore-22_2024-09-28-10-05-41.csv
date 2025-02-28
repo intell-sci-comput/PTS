@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Livermore-22,True,2.3676304817199707,,9.498234e-05,0.8866966082372775,11,(sin(x1) + sin(2*x1))/(3*x1),(sin(x1) + sin(2*x1))/(3*x1),exp(x1**2*(-x1**2 + x1)/(2*x1**2 - 2*x1)),exp(-x1**2/2)
-Livermore-22,True,11.42003607749939,,1.4210855e-15,0.9227446596429494,8,exp(-x1**2/2),exp(-x1**2/2),exp(-x1**2/2),exp(-x1**2/2)

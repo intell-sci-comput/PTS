@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-(x1**4 + x1)*(x1**2 + x1 + 1),0.9227445735743041,1.715364e-14,8

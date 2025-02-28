@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-R3,True,51.32926058769226,,0.00053718244,0.9018425132919834,8,(x1 - sin(x1))*exp(x1),(x1 - sin(x1))*exp(x1),x1**6/(-x1**4/(x1 + 1) + x1**3*(x1 + 1) + x1),x1**5*(x1 + 1)/(x1**4 + x1**3 + x1**2 + x1 + 1)
-R3,True,49.66329884529114,,0.00053718244,0.9018425132919834,8,(x1 - sin(x1))*exp(x1),(x1 - sin(x1))*exp(x1),x1**5/(x1**3 + x1 + x1/(x1**2 + x1)),x1**5*(x1 + 1)/(x1*(x1 + 1)*(x1**2 + 1) + 1)

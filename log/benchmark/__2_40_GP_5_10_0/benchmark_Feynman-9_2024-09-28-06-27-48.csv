@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Feynman-9,True,1.8596434593200684,,6.405074e-12,0.9043797861820513,10,x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5))
-Feynman-9,True,1.8781285285949707,,4.7779515e-12,0.9043800981672397,10,x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5)),x1*x2*x3*(-log(x4) + log(x5))
