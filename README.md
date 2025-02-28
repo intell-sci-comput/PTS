@@ -2,6 +2,14 @@
 
 *Official implementation of PCTS (formerly PTS) with its core PSRN (Parallel Symbolic Regression Network) module*
 
+
+![License](https://img.shields.io/badge/License-MIT-2196F3.svg)
+![AI4Science](https://img.shields.io/badge/AI4Science-8A2BE2)
+![Stars](https://img.shields.io/github/stars/intell-sci-comput/PTS)
+![Forks](https://img.shields.io/github/forks/intell-sci-comput/PTS)
+[![arXiv](https://img.shields.io/badge/arXiv-2407.04405-b31b1b.svg)](https://arxiv.org/abs/2407.04405)
+
+
 ![fig1.png](./assets/fig1.png)
 
 ![SRbench.png](./assets/SRbench.png)
