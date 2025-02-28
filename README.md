@@ -2,6 +2,9 @@
 
 ![fig1.png](./assets/fig1.png)
 
+![SRbench.png](./assets/SRbench.png)
+
+
 ## 📥 Installation
 
 ### Step 1: Create an Environment and Install PyTorch
@@ -192,7 +195,6 @@ To evaluate PTS's performance on SRbench, follow these steps:
 This setup will allow you to benchmark PTS using the SRbench, providing a standardized evaluation of its performance alongside other symbolic regression algorithms.
 
 
-![SRbench.png](./assets/SRbench.png)
 
 
 ## 📚 Citation
