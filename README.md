@@ -1,4 +1,4 @@
-# PCTS: Parallel Combinatorial Tree Search for Symbolic Regression
+# Discovering physical laws with parallel combinatorial tree search
 
 *Official implementation of PCTS (formerly PTS) with its core PSRN (Parallel Symbolic Regression Network) module*
 
