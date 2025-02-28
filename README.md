@@ -1,9 +1,12 @@
-# 🌳 Discovering Symbolic Expressions with Parallelized Tree Search (PTS)
+# PCTS: Parallel Combinatorial Tree Search for Symbolic Regression
 
-![fig1.png](./assets/fig1.png)
+*Official implementation of PCTS (formerly PTS) with its core PSRN (Parallel Symbolic Regression Network) module*
 
-![SRbench.png](./assets/SRbench.png)
+[fig1.png](./assets/fig1.png)
 
+[SRbench.png](./assets/SRbench.png)
+
+This repository contains the official PyTorch implementation of PCTS (Parallel Combinatorial Tree Search): A fast and efficient symbolic expression discovery method powered by PSRN (Parallel Symbolic Regression Network). PSRN evaluates millions of symbolic expressions simultaneously on GPU with automated subtree reuse.
 
 ## 📥 Installation
 
@@ -186,16 +189,13 @@ python study_ablation/drmask/run_without_drmask.py --use_drmask False -g 0
 
 ## 🏆 SRbench Evaluation
 
-To evaluate PTS's performance on SRbench, follow these steps:
+To evaluate PCTS's performance on SRbench, follow these steps:
 
 1. Copy the `SRBenchRegressor` directory into the `algorithm` folder of your SRbench installation.
 
 2. Follow the standard SRbench instructions to run our algorithm.
 
-This setup will allow you to benchmark PTS using the SRbench, providing a standardized evaluation of its performance alongside other symbolic regression algorithms.
-
-
-
+This setup will allow you to benchmark PCTS using the SRbench, providing a standardized evaluation of its performance alongside other symbolic regression algorithms.
 
 ## 📚 Citation
 
