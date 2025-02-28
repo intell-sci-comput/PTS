@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Livermore-16,True,436.0993015766144,,4.2743586e-15,0.9605959471976016,4,x1**(2/5),x1**(2/5),x1**(2/5),x1**(2/5)
-Livermore-16,True,651.262359380722,,7.1054275e-16,0.960595984394346,4,x1**(2/5),x1**(2/5),x1**(2/5),x1**(2/5)

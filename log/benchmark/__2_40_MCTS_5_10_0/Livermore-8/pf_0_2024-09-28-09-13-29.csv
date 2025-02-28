@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-exp(x1)/2 + exp(-x1)/2,0.8863848244611677,2.842171e-15,12

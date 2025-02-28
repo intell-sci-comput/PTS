@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Livermore-18,True,3.927581310272217,,0.0,0.9043820750088044,10,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5
-Livermore-18,True,1.5697267055511475,,1.1368684e-14,0.9043819785799525,10,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5,sin(x1**2)*cos(x1) - 5

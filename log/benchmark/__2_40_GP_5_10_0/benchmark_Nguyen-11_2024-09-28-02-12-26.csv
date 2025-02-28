@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Nguyen-11,True,1.9498634338378906,,1.5813404e-15,0.9320653108424143,7,exp(x2*log(x1)),exp(x2*log(x1)),exp(x2*log(x1)),exp(x2*log(x1))
-Nguyen-11,True,1.7531654834747314,,1.5747717e-15,0.9320653109194759,7,exp(x2*log(x1)),exp(x2*log(x1)),exp(x2*log(x1)),exp(x2*log(x1))

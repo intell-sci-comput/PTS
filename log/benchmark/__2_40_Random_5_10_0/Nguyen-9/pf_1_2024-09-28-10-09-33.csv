@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-sin(x1) + sin(x2**2),0.9135172071265629,1.951668e-15,9

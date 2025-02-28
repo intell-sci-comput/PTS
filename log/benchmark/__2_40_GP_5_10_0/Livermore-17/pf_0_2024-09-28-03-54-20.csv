@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-(4*x2 + 4*sin(x1))*sin(x1)*cos(x2)/(x2 + sin(x1)),0.8179068496997314,1.1549026e-14,20

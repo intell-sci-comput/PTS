@@ -1,2 +1,0 @@
-expr_str,reward,MSE,complexity
-x1**3 + x1**2 + x1,0.9414800563421727,9.769963e-15,6

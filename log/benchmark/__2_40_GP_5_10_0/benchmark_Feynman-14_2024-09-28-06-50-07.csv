@@ -1,3 +1,0 @@
-name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
-Feynman-14,True,1.8987462520599365,,1.1731847e-12,0.9227436949705324,8,x2*x5*(x1*x3 - x1*x4)/(x3*x4),x1*x2*x5*(x3 - x4)/(x3*x4),x2*x5*(x1*x3 - x1*x4)/(x3*x4),x1*x2*x5*(x3 - x4)/(x3*x4)
-Feynman-14,True,1.8922386169433594,,9.879798e-13,0.9227437772467045,8,x1*x2*x5*(1 - x4/x3)/x4,x1*x2*x5*(x3 - x4)/(x3*x4),x1*x2*x5*(1 - x4/x3)/x4,x1*x2*x5*(x3 - x4)/(x3*x4)
