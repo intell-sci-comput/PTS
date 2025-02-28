@@ -2,9 +2,9 @@
 
 *Official implementation of PCTS (formerly PTS) with its core PSRN (Parallel Symbolic Regression Network) module*
 
-[fig1.png](./assets/fig1.png)
+![fig1.png](./assets/fig1.png)
 
-[SRbench.png](./assets/SRbench.png)
+![SRbench.png](./assets/SRbench.png)
 
 This repository contains the official PyTorch implementation of PCTS (Parallel Combinatorial Tree Search): A fast and efficient symbolic expression discovery method powered by PSRN (Parallel Symbolic Regression Network). PSRN evaluates millions of symbolic expressions simultaneously on GPU with automated subtree reuse.
 
