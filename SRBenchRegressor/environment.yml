@@ -1,0 +1,8 @@
+
+channels:
+  - nvidia
+  - conda-forge
+  - pytorch
+  - intel
+  - defaults
+dependencies:

@@ -1,0 +1,3 @@
+name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
+Nguyen-9,True,1.3564300537109375,,1.5311883e-15,0.9135172117373452,9,sin(x1) + sin(x2**2),sin(x1) + sin(x2**2),sin(x1) + sin(x2**2),sin(x1) + sin(x2**2)
+Nguyen-9,True,1.3325328826904297,,1.951668e-15,0.9135172071265629,9,sin(x1) + sin(x2**2),sin(x1) + sin(x2**2),sin(x1) + sin(x2**2),sin(x1) + sin(x2**2)

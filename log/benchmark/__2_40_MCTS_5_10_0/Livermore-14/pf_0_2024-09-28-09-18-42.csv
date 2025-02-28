@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+x1**3 + x1**2 + x1 + sin(x1) + sin(x1**2),0.8514576175526499,3.2518432e-14,16

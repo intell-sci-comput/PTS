@@ -1,0 +1,8 @@
+default:
+  operators: ['Add','Mul','SemiSub','SemiDiv','Identity','Sign','Sin','Cos','Exp','Log']
+  time_limit: 90
+  n_psrn_inputs: 6
+  n_sample_variables: 4
+
+stages:
+  - {}   # use default single phase

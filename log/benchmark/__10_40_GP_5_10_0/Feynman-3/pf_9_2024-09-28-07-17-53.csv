@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+x1*x2**2,0.9702962057959297,8.292922e-12,3

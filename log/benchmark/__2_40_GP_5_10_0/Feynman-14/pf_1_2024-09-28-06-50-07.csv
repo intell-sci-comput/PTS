@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+x1*x2*x5*(1 - x4/x3)/x4,0.9227437772467045,9.879798e-13,8

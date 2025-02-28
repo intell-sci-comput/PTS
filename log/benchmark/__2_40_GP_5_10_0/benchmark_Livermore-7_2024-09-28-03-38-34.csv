@@ -1,0 +1,3 @@
+name,success,time_cost,R2,MSE,reward,complexity,expr_str_best_Reward,expr_sympy_best_Reward,expr_str_best_MSE,expr_sympy_best_MSE
+Livermore-7,True,2.362199544906616,,1.7262e-08,0.9319429046537036,7,0.333333333333333*x1**3 + sin(x1),0.333333333333333*x1**3 + sin(x1),exp(x1)/2 - exp(-x1)/2,sinh(x1)
+Livermore-7,True,1.630070447921753,,2.4813485e-15,0.8863848275625215,12,exp(x1)/2 - exp(-x1)/2,sinh(x1),exp(x1)/2 - exp(-x1)/2,sinh(x1)

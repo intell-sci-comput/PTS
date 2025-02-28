@@ -1,0 +1,2 @@
+expr_str,reward,MSE,complexity
+sin(x1)*sin(2*x2)/sin(x2),0.877520974849879,3.010656e-15,13
