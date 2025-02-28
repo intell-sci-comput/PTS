@@ -2,6 +2,7 @@
 
 *Official implementation of PCTS (formerly PTS) with its core PSRN (Parallel Symbolic Regression Network) module*
 
+**Authors:** Kai Ruan, Yilong Xu, Ze-Feng Gao, Yike Guo, Hao Sun, Ji-Rong Wen, Yang Liu
 
 ![License](https://img.shields.io/badge/License-MIT-2196F3.svg)
 ![AI4Science](https://img.shields.io/badge/AI4Science-8A2BE2)
