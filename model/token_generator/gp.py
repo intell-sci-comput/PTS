@@ -149,106 +149,128 @@ class GP_TokenGenerator(TokenGenerator):
         reset=False,
         use_float_const=False,
     ):
-
+        """
+        Generate tokens for symbolic regression.
+        
+        Args:
+            n_psrn_tokens: Total number of tokens to generate
+            n_sample_variables: Number of variable tokens
+            X: Input features matrix
+            y: Target values
+            use_set: Whether to ensure unique token sets
+            reset: Whether to reset the token generator model
+            use_float_const: Whether to use floating point constants
+        
+        Returns:
+            Tuple of (best_expression, sampled_tokens)
+        """
+        # Calculate token count and prepare data
         n_tokens = n_psrn_tokens - n_sample_variables
-
         y = y.reshape(-1)
         X = np.transpose(X, (1, 0))
-        best_expr, all_expr_form = self.token_generator_fit_x_y(
-            X, y, self.config, reset=reset
-        )
-        symbols = self.process_all_form_to_tokens(all_expr_form, use_float_const)
-        best_expr = self.replace_varname([best_expr])[0]
-        symbols_sympy = [sp.S(str(sym)) for sym in symbols]
-        tokens = []
-        symbols_sympy += (
-            [e.expand() for e in symbols_sympy]
-            + [e.together() for e in symbols_sympy]
-            + [e.powsimp() for e in symbols_sympy]
-            + [e.radsimp() for e in symbols_sympy]
-        )
-
-        for expr in symbols_sympy:
-            subexpr = get_last_subexprs(expr)
-            for e in subexpr:
-                if e.count_ops() < 10:
-                    tokens.append(e)
-        tokens = list(set(tokens))
         
+        # Get expressions from model
+        best_expr, all_expr_form = self.token_generator_fit_x_y(X, y, self.config, reset=reset)
+        best_expr = self.replace_varname([best_expr])[0]
+        
+        # Process expressions to tokens
+        symbols = self.process_all_form_to_tokens(all_expr_form, use_float_const)
+        
+        # Convert to sympy symbols and gather variations
+        symbols_sympy = [sp.S(str(sym)) for sym in symbols]
+        symbols_sympy += [e.expand() for e in symbols_sympy] + \
+                        [e.together() for e in symbols_sympy] + \
+                        [e.powsimp() for e in symbols_sympy] + \
+                        [e.radsimp() for e in symbols_sympy]
+
+        # Extract useful subexpressions
+        tokens = []
+        for expr in symbols_sympy:
+            for subexpr in get_last_subexprs(expr):
+                if subexpr.count_ops() < 10:  # Only keep manageable expressions
+                    tokens.append(subexpr)
+        
+        # Get frequencies
         token_counts = Counter(tokens)
         all_tokens = list(token_counts.keys())
         frequencies = list(token_counts.values())
         tokens_freq = list(zip(all_tokens, frequencies))
 
-        n_try = 0
-        keep_try = True
-        while keep_try:
-
-            n_try += 1
-            if n_try > MAX_LEN_SET:
-                keep_try = False
-            if len(all_tokens) > n_tokens:
-                sampled_tokens = []
-
-                n_try_2 = 0
-                while len(sampled_tokens) < n_tokens:
-                    n_try_2 += 1
-                    if n_try_2 > MAX_LEN_SET:
-                        sampled_tokens = random.choices(
-                            all_tokens, weights=frequencies, k=n_tokens
-                        )
-                        break
-                    if random.random() < SAMPLE_PROB:
-                        if random.random() < SAMPLE_PROB_CROSS_VAR:
-                            chosen_token = sp.S(
-                                generate_cross_variable(self.variables, 1)[0]
-                            )
-                        else:
-                            chosen_token = sp.S(self.sample_const(use_float_const))
-                    else:
-                        chosen_token = sp.S(
-                            random.choices(
-                                [token for token, freq in tokens_freq],
-                                weights=[freq for token, freq in tokens_freq],
-                                k=1,
-                            )[0]
-                        )
-
-                    if chosen_token is None:
-                        continue
-                    if (
-                        not (not use_float_const and "." in str(chosen_token))
-                        and str(chosen_token) not in self.variables
-                        and not has_nested_func(chosen_token)
-                        and not has_large_integer(chosen_token)
-                    ):
-                        if chosen_token not in sampled_tokens:
-                            sampled_tokens.append(chosen_token)
-            else:
-                sampled_constants_num = n_tokens - len(tokens)
-                sampled_constants = [
-                    self.sample_const(use_float_const)
-                    for i in range(sampled_constants_num)
-                ]
-                sampled_tokens = tokens + sampled_constants
+        # Try to find valid token set
+        for _ in range(MAX_LEN_SET):
+            sampled_tokens = self._generate_token_sample(
+                all_tokens, frequencies, tokens_freq, n_tokens, use_float_const
+            )
+            
+            # Convert to strings
             sampled_tokens = [str(t) for t in sampled_tokens]
-
-            if use_set:
-                sampled_set = set(sampled_tokens)
-                if len(sampled_set) != len(set(sampled_tokens + self.variables)) - len(
-                    self.variables
-                ):
-                    continue
-
-                if str(sampled_set) not in self.visited_set:
-                    self.visited_set.add(str(sampled_set))
-                    return best_expr, sampled_tokens
-                else:
-                    continue
-            else:
+            
+            # If not using set constraints, we're done
+            if not use_set:
                 return best_expr, sampled_tokens
-
+            
+            # Check for variable overlap and uniqueness
+            sampled_set = set(sampled_tokens)
+            if len(sampled_set) != len(set(sampled_tokens + self.variables)) - len(self.variables):
+                continue
+                
+            # Check if this set is new
+            set_key = str(sampled_set)
+            if set_key not in self.visited_set:
+                self.visited_set.add(set_key)
+                return best_expr, sampled_tokens
+        
+        # Return last attempted sample if we couldn't find a valid one
         return best_expr, sampled_tokens
+
+    def _generate_token_sample(self, all_tokens, frequencies, tokens_freq, n_tokens, use_float_const):
+        """Generate a sample of tokens based on available pool and constraints."""
+        # If we have enough tokens to sample from
+        if len(all_tokens) > n_tokens:
+            sampled_tokens = []
+            
+            # Try to collect unique valid tokens
+            for _ in range(MAX_LEN_SET):
+                if len(sampled_tokens) >= n_tokens:
+                    break
+                    
+                # Choose sampling strategy
+                if random.random() < SAMPLE_PROB:
+                    if random.random() < SAMPLE_PROB_CROSS_VAR:
+                        # Sample from cross-variables
+                        chosen_token = sp.S(generate_cross_variable(self.variables, 1)[0])
+                    else:
+                        # Sample a constant
+                        chosen_token = sp.S(self.sample_const(use_float_const))
+                else:
+                    # Sample from token pool based on frequency
+                    chosen_token = random.choices(
+                        [token for token, _ in tokens_freq],
+                        weights=[freq for _, freq in tokens_freq],
+                        k=1
+                    )[0]
+                
+                # Validate the token
+                if chosen_token is None:
+                    continue
+                    
+                if (not (not use_float_const and "." in str(chosen_token))
+                    and str(chosen_token) not in self.variables
+                    and not has_nested_func(chosen_token)
+                    and not has_large_integer(chosen_token)
+                    and chosen_token not in sampled_tokens):
+                    sampled_tokens.append(chosen_token)
+            
+            # If we couldn't get enough tokens, use random sampling
+            if len(sampled_tokens) < n_tokens:
+                sampled_tokens = random.choices(all_tokens, weights=frequencies, k=n_tokens)
+        else:
+            # Not enough tokens, supplement with constants
+            sampled_constants_num = n_tokens - len(all_tokens)
+            sampled_constants = [self.sample_const(use_float_const) for _ in range(sampled_constants_num)]
+            sampled_tokens = all_tokens + sampled_constants
+        
+        return sampled_tokens
 
     def process_all_form_to_tokens(self, all_expr_form, use_float_const):
         new_expr_forms = []
