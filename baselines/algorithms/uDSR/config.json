@@ -1,0 +1,89 @@
+{
+   "task" : {
+      "task_type" : "regression",
+      "dataset" : "../../../data/transformed/KawczynskiStrizhak_ydot_5.csv",
+      "function_set": ["add", "sub", "mul", "div", "sin", "cos", "exp", "log"],
+      "metric" : "inv_nrmse",
+      "metric_params" : [1.0],
+      "extra_metric_test" : null,
+      "extra_metric_test_params" : [],
+      "threshold" : 1e-12,
+      "protected" : false,
+      "reward_noise" : 0.0,
+      "reward_noise_type" : "r",
+      "normalize_variance" : false,
+      "decision_tree_threshold_set" : [],
+      "poly_optimizer_params" : {
+         "degree": 3,
+         "coef_tol": 1e-6,
+         "regressor": "dso_least_squares",
+         "regressor_params": {
+            "cutoff_p_value": 1.0,
+            "n_max_terms": null,
+            "coef_tol": 1e-6
+         }
+      }
+   },
+   "gp_meld" : {
+      "run_gp_meld" : true,
+      "population_size" : 100,
+      "generations" : 20,
+      "crossover_operator" : "cxOnePoint",
+      "p_crossover" : 0.5,
+      "mutation_operator" : "multi_mutate",
+      "p_mutate" : 0.5,   
+      "tournament_size" : 5,
+      "train_n" : 50,
+      "mutate_tree_max" : 3,
+      "verbose" : false,
+      "parallel_eval" : true
+   },
+   "training" : {
+      "n_samples" : 20000,
+      "batch_size" : 500,
+      "epsilon" : 0.02,
+      "n_cores_batch" : -1
+   },
+
+   "controller" : {
+      "learning_rate": 0.0025,
+      "entropy_weight" : 0.03,
+      "entropy_gamma" : 0.7,
+      "pqt" : true,
+      "pqt_k" : 10,
+      "pqt_batch_size" : 1,
+      "pqt_weight" : 200.0,
+      "pqt_use_pg" : false
+   },
+
+   "prior": {
+      "length" : {
+         "min_" : 4,
+         "max_" : 100,
+         "on" : true
+      },
+      "inverse" : {
+         "on" : true
+      },
+      "trig" : {
+         "on" : true
+      },
+      "const" : {
+         "on" : true
+      },
+      "no_inputs" : {
+         "on" : true
+      },
+      "uniform_arity" : {
+         "on" : true
+      },
+      "soft_length" : {
+         "loc" : 10,
+         "scale" : 5,
+         "on" : true
+      },
+      "domain_range" : {
+         "on" : true
+      }
+   }
+}
