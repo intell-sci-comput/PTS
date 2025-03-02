@@ -151,11 +151,7 @@ def main(n_runs):
 
                 result = TwoPhaseInference(FuncMatrix, NumDiv, Nnodes=10, dim=dim, Dim=dim, 
                                             keep=8, SampleTime=30, batchsize=3, 
-                                            Lambda=Lambda, plotstart=0.1, plotend=0.9) # 1 min
-                
-                # result = TwoPhaseInference(FuncMatrix, NumDiv, Nnodes=10, dim=dim, Dim=dim, 
-                #                            keep=8, SampleTime=30*10, batchsize=3, 
-                #                            Lambda=Lambda, plotstart=0.1, plotend=0.9) # 10 min
+                                            Lambda=Lambda, plotstart=0.1, plotend=0.9)
                 
                 end_time = time.time()
                 time_cost = end_time - start_time
