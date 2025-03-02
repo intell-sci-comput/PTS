@@ -85,5 +85,8 @@
       "domain_range" : {
          "on" : true
       }
+   },
+   "experiment":{
+      "seed":seed_replace
    }
 }
