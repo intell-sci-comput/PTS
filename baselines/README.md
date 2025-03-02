@@ -67,6 +67,17 @@ This folder contains implementations of baseline methods used for comparison in 
   year = {2023},
   url = {https://openreview.net/forum?id=ZTK3SefE8_Z}
 }
+
+@article{BMS_Guimera2020,
+  title = {A {Bayesian} machine scientist to aid in the solution of challenging scientific problems},
+  author = {Guimer{\`a}, Roger and Reichardt, Ignasi and Aguilar-Mogas, Antoni and Massucci, Francesco A and Miranda, Manuel and Pallar{\`e}s, Jordi and Sales-Pardo, Marta},
+  journal = {Science Advances},
+  volume = {6},
+  number = {5},
+  pages = {eaav6971},
+  year = {2020},
+  publisher = {American Association for the Advancement of Science}
+}
 ```
 
 ## Method Descriptions
@@ -84,6 +95,8 @@ This folder contains implementations of baseline methods used for comparison in 
 6. **uDSR (unified Deep Symbolic Regression)**: A framework by Landajuela et al. that attempts to unify different aspects of deep symbolic regression into a cohesive approach.
 
 7. **SPL (Symbolic Physics Learner)**: A search-based approach by Sun et al. that employs Monte Carlo tree search techniques to discover governing equations in physical systems.
+
+8. **BMS (Bayesian Machine Scientist)**: A method by Guimerà et al. published in Science Advances that uses Bayesian inference to discover mathematical expressions from data, providing both accurate models and uncertainty quantification.
 
 ## Acknowledgments
 

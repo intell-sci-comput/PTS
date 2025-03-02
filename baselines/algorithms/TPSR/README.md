@@ -4,9 +4,11 @@ Official Implementation of the **state-of-the-art** baseline **[Transformer-base
 
 ## Running Steps:
 
-1. run gen_csv_datasets.py in main project folder
-2. run train/train.py for training models
-3. run TPSR/run.py --eval_mcts_on_pmlb True \
+1. Run `gen_csv_datasets.py` in main project folder
+2. Run `train/train.py` for training models
+3. Run 
+```bash
+TPSR/run.py --eval_mcts_on_pmlb True \
                    --lam 0.1 \
                    --horizon 200 \
                    --width 3 \
@@ -17,6 +19,7 @@ Official Implementation of the **state-of-the-art** baseline **[Transformer-base
                    --max_input_points 200 \
                    --max_number_bags 10 \
                    --save_results True
+```
 
 ## Citation
 
