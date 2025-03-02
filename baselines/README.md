@@ -1,5 +1,3 @@
-Based on the feedback, here's the final improved version of your README:
-
 # Baseline Methods
 
 This folder contains implementations of baseline methods used for comparison in our paper. These methods were selected based on their relevance, effectiveness, and established recognition within the symbolic regression community. Implementations closely follow the original papers to ensure a fair and rigorous evaluation of our proposed approach.
